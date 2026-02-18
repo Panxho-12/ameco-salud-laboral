@@ -776,6 +776,12 @@ class AmecoApp {
         `;
 
         container.innerHTML = html;
+        
+        // Hacer scroll inmediatamente después de renderizar (Conditions)
+        setTimeout(() => {
+            console.log('🎯 Auto-scroll desde renderConditionsForm');
+            this.scrollToCurrentDay();
+        }, 100);
     }
 
     renderFatigueForm() {
@@ -832,6 +838,12 @@ class AmecoApp {
         `;
 
         container.innerHTML = html;
+        
+        // Hacer scroll inmediatamente después de renderizar (Fatigue)
+        setTimeout(() => {
+            console.log('🎯 Auto-scroll desde renderFatigueForm');
+            this.scrollToCurrentDay();
+        }, 150);
     }
 
     renderSupervisorDerivationGrid() {
