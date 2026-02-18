@@ -569,8 +569,14 @@ class AmecoApp {
             document.getElementById('saveBtn').style.display = 'none';
         }
         
-        // Auto-scroll al día actual (múltiples intentos para asegurar que funcione)
-        this.scrollToCurrentDay();
+        // Auto-scroll al día actual DESPUÉS de que el DOM se haya renderizado
+        // Usar requestAnimationFrame para asegurar que el DOM esté listo
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                console.log('🎯 Llamando a scrollToCurrentDay desde updateUI');
+                this.scrollToCurrentDay();
+            });
+        });
     }
 
     switchTab(formType) {
