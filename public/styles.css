@@ -411,8 +411,8 @@ body {
     margin: 0 auto;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
+    scroll-behavior: auto; /* Cambiado de smooth a auto para scroll programático */
+    scroll-snap-type: none; /* Deshabilitado temporalmente para testing */
     scrollbar-width: thin;
     scrollbar-color: #004488 #f1f1f1;
 }

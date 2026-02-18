@@ -2266,45 +2266,55 @@ class AmecoApp {
     }
 
     scrollToCurrentDay() {
-        console.log('🚀 Iniciando auto-scroll al día actual:', this.currentDay);
+        console.log('🚀 INICIANDO AUTO-SCROLL - Día actual:', this.currentDay);
         
-        // Intentar múltiples veces con delays progresivos
-        const delays = [0, 200, 500, 1000, 1500, 2000];
-        
-        delays.forEach(delay => {
-            setTimeout(() => {
-                // Buscar TODOS los grids de días (el contenedor con scroll)
-                const daysGrids = document.querySelectorAll('.days-grid');
+        // Función para hacer el scroll
+        const doScroll = () => {
+            const daysGrids = document.querySelectorAll('.days-grid');
+            console.log('📊 Grids encontrados:', daysGrids.length);
+            
+            if (daysGrids.length === 0) {
+                console.log('❌ NO SE ENCONTRARON GRIDS');
+                return false;
+            }
+            
+            let scrolledCount = 0;
+            daysGrids.forEach((grid, index) => {
+                const currentDayElement = grid.querySelector('.day-column.current-day');
                 
-                if (daysGrids.length === 0) {
-                    console.log(`⚠️ No se encontraron grids (delay: ${delay}ms)`);
-                    return;
-                }
-                
-                console.log(`🔄 Intento ${delay}ms - Encontrados ${daysGrids.length} grids`);
-                
-                // Hacer scroll en cada grid
-                daysGrids.forEach((grid, index) => {
-                    // Buscar el día actual dentro de este grid
-                    const currentDayElement = grid.querySelector('.day-column.current-day');
+                if (currentDayElement) {
+                    const gridWidth = grid.offsetWidth;
+                    const dayWidth = currentDayElement.offsetWidth;
+                    const dayLeft = currentDayElement.offsetLeft;
+                    const scrollPosition = dayLeft - (gridWidth / 2) + (dayWidth / 2);
                     
-                    if (currentDayElement) {
-                        // Calcular la posición de scroll
-                        const gridWidth = grid.offsetWidth;
-                        const dayWidth = currentDayElement.offsetWidth;
-                        const dayLeft = currentDayElement.offsetLeft;
-                        
-                        // Centrar el día actual
-                        const scrollPosition = dayLeft - (gridWidth / 2) + (dayWidth / 2);
-                        
-                        // Aplicar scroll INSTANTÁNEO
-                        grid.scrollLeft = Math.max(0, scrollPosition);
-                        
-                        console.log(`✅ Grid ${index + 1}: scrollLeft = ${grid.scrollLeft}px (día ${this.currentDay})`);
-                    } else {
-                        console.log(`⚠️ Grid ${index + 1}: No tiene día actual`);
-                    }
-                });
+                    console.log(`📍 Grid ${index + 1}:`, {
+                        gridWidth,
+                        dayWidth,
+                        dayLeft,
+                        scrollPosition: Math.max(0, scrollPosition)
+                    });
+                    
+                    grid.scrollLeft = Math.max(0, scrollPosition);
+                    scrolledCount++;
+                    
+                    console.log(`✅ Grid ${index + 1} scrolleado a ${grid.scrollLeft}px`);
+                } else {
+                    console.log(`⚠️ Grid ${index + 1}: NO tiene día actual`);
+                }
+            });
+            
+            return scrolledCount > 0;
+        };
+        
+        // Intentar inmediatamente
+        doScroll();
+        
+        // Intentar múltiples veces con delays
+        [100, 300, 600, 1000, 1500, 2000, 3000].forEach(delay => {
+            setTimeout(() => {
+                console.log(`🔄 Reintento después de ${delay}ms`);
+                doScroll();
             }, delay);
         });
     }
