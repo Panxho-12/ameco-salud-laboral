@@ -1,0 +1,2 @@
+Version: 2026-02-18-17:50 - AUTO-SCROLL IMPLEMENTADO
+Deploy timestamp: 2026-02-18 17:50:00
