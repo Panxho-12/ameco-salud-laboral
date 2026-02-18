@@ -1,0 +1,3432 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Desktop: tamaños más grandes */
+@media (min-width: 769px) {
+    html {
+        font-size: 20px;
+    }
+    
+    .login-container {
+        max-width: 450px;
+        padding: 2.5rem;
+    }
+    
+    .ameco-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .form-group input {
+        font-size: 1.1rem;
+        padding: 0.9rem;
+    }
+    
+    .btn-primary, .btn-secondary, .btn-success {
+        font-size: 1.1rem;
+        padding: 0.9rem 1.3rem;
+    }
+    
+    .shift-info h2 {
+        font-size: 1.5rem;
+    }
+    
+    .forms-container h3 {
+        font-size: 1.3rem;
+    }
+    
+    .form-section h4 {
+        font-size: 1.3rem;
+    }
+    
+    .question-text {
+        font-size: 1.2rem;
+    }
+    
+    .question-reference {
+        font-size: 1.05rem;
+    }
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* Login Screen */
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.ameco-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.ameco-header .ameco-logo-login {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 1.5rem;
+}
+
+.ameco-header h1 {
+    color: #004488;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    font-weight: normal;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+    font-size: 1.05rem;
+}
+
+.form-group input {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1.05rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #004488;
+}
+
+.btn-primary {
+    background-color: #004488;
+    color: white;
+    padding: 0.85rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #003366;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 0.6rem 1.1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    padding: 0.85rem 1.6rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1.05rem;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.error-message {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 1rem;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* Dashboard */
+.app-header {
+    background-color: #004488;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ameco-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ameco-logo-header {
+    max-width: 120px;
+    width: 100%;
+    height: auto;
+}
+
+.ameco-logo span {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+/* Logo text styles for login */
+.ameco-logo-text {
+    background: linear-gradient(180deg, #1a5490 0%, #1a5490 75%, #e31e24 75%, #e31e24 100%);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+.ameco-main {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 0.3rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.ameco-sub {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #8fa3b8;
+    letter-spacing: 0.3rem;
+    text-align: center;
+}
+
+/* Logo text styles for header */
+.ameco-logo-text-header {
+    background: linear-gradient(180deg, #1a5490 0%, #1a5490 70%, #e31e24 70%, #e31e24 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.ameco-main-header {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 0.1rem;
+}
+
+.ameco-sub-header {
+    font-size: 0.45rem;
+    font-weight: 400;
+    color: #b8c5d6;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.shift-info {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.shift-info h2 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.shift-details {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.shift-details span {
+    background-color: #e9ecef;
+    padding: 0.6rem 1.1rem;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #495057;
+    font-size: 1.05rem;
+}
+
+.forms-container {
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+.form-tabs {
+    display: flex;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    color: #495057;
+    font-size: 1.05rem;
+}
+
+.tab-btn.active {
+    background-color: white;
+    border-bottom: 2px solid #004488;
+    color: #004488;
+}
+
+.tab-btn:hover {
+    background-color: #e9ecef;
+}
+
+.form-content {
+    display: none;
+    padding: 1.5rem;
+}
+
+.form-content.active {
+    display: block;
+}
+
+/* Form Sections */
+.form-section h4 {
+    color: #004488;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid #004488;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Question Rows */
+.question-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+    background-color: white;
+}
+
+.question-text {
+    font-weight: bold;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.question-reference {
+    font-size: 1rem;
+    color: #666;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.question-row > div:first-child {
+    flex: 0 0 320px;
+    margin-right: 2rem;
+}
+
+/* Days Grid - Carrusel con Scroll */
+.days-grid {
+    position: relative;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background-color: #dee2e6;
+    width: 100%;
+    max-width: 575px;
+    margin: 0 auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: #004488 #f1f1f1;
+}
+
+/* Webkit scrollbar styling */
+.days-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.days-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.days-grid::-webkit-scrollbar-thumb {
+    background: #004488;
+    border-radius: 4px;
+}
+
+.days-grid::-webkit-scrollbar-thumb:hover {
+    background: #003366;
+}
+
+.days-container {
+    display: flex;
+    width: 1150px; /* 10 días × 115px = 1150px */
+    transition: none; /* Removemos la transición CSS */
+}
+
+.day-column {
+    background-color: white;
+    border-right: 1px solid #dee2e6;
+    flex-shrink: 0;
+    width: 115px;
+    height: 90px;
+    scroll-snap-align: start;
+}
+
+.day-column:last-child {
+    border-right: none;
+}
+
+/* Resaltar el día actual */
+.day-column.current-day {
+    background-color: #fff8e1;
+    border: 2px solid #ffc107;
+}
+
+.day-column.current-day .day-header {
+    background-color: #ffc107;
+    color: #000;
+    font-weight: 700;
+}
+
+.day-header {
+    font-weight: bold;
+    padding: 0.5rem 0.3rem;
+    background-color: #004488;
+    color: white;
+    font-size: 0.8rem;
+    text-align: center;
+    border: none;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.day-options {
+    background-color: white;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signature-day-options {
+    padding: 0.2rem;
+}
+
+.digital-signature-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 0.1rem;
+    box-sizing: border-box;
+}
+
+.digital-signature-preview {
+    max-width: 95%;
+    max-height: 45px;
+    width: auto;
+    height: auto;
+    border: none;
+    background-color: transparent;
+    border-radius: 2px;
+    object-fit: contain;
+}
+
+.signature-grid-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.signature-status-left {
+    font-size: 0.8rem;
+    color: #28a745;
+    font-weight: bold;
+    white-space: nowrap;
+    min-width: 70px;
+}
+
+.supervisor-signature-readonly {
+    opacity: 0.9;
+    border: 1px solid #004488;
+    border-radius: 3px;
+    background-color: #f8f9fa;
+}
+
+.supervisor-signature-readonly .digital-signature-preview {
+    filter: none;
+}
+
+/* Signatures detail section */
+.signatures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.signature-detail-item {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.signature-detail-label {
+    font-weight: bold;
+    color: #004488;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.signature-detail-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+}
+
+.signature-detail-preview {
+    max-width: 150px;
+    max-height: 50px;
+    object-fit: contain;
+}
+
+.signature-placeholder {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.signature-placeholder.signature-signed {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    font-weight: bold;
+}
+
+.signature-placeholder.signature-pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+/* Responsive signatures grid */
+@media (max-width: 768px) {
+    .signatures-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .signature-detail-item {
+        padding: 0.75rem;
+    }
+    
+    .signature-detail-preview {
+        max-width: 120px;
+        max-height: 40px;
+    }
+}
+
+.no-signature-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 0.1rem;
+    box-sizing: border-box;
+}
+
+.btn-create-signature-inline {
+    background-color: #ffc107;
+    color: #212529;
+    border: none;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.55rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.btn-create-signature-inline:hover {
+    background-color: #e0a800;
+}
+
+.option-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem;
+    width: 100%;
+    height: 100%;
+}
+
+.option-group label {
+    font-size: 0.9rem;
+    font-weight: normal;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #495057;
+    transition: color 0.3s ease;
+}
+
+.option-group label:hover {
+    color: #004488;
+}
+
+.option-group input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    margin-right: 0.25rem;
+    cursor: pointer;
+    transform: scale(0.9);
+    position: relative;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.option-group input[type="radio"]:checked {
+    border-width: 2px;
+}
+
+/* Green for "Sí" (Yes) */
+.option-group input[type="radio"][value="si"]:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.option-group input[type="radio"][value="si"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* Red for "No" */
+.option-group input[type="radio"][value="no"]:checked {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.option-group input[type="radio"][value="no"]:checked::after {
+    content: '✗';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* Hover effects */
+.option-group input[type="radio"]:hover {
+    border-color: #004488;
+    transform: scale(1);
+}
+
+/* Disabled state */
+.option-group input[type="radio"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.option-group input[type="radio"]:disabled:hover {
+    transform: scale(0.9);
+    border-color: #ccc;
+}
+
+/* Day States */
+.current-day .day-header {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    font-weight: bold;
+}
+
+.current-day .option-group {
+    background-color: #fff3cd !important;
+}
+
+.completed-day .day-header {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+.completed-day .option-group {
+    background-color: #d4edda !important;
+}
+
+/* Disabled days (future days) */
+.disabled-day {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.disabled-day .day-header {
+    background-color: #6c757d !important;
+    color: white !important;
+}
+
+.disabled-day .option-group {
+    background-color: #f8f9fa !important;
+}
+
+.disabled-day input[type="radio"] {
+    cursor: not-allowed;
+}
+
+.disabled-day label {
+    cursor: not-allowed;
+    color: #6c757d !important;
+}
+
+/* Responsive - Desktop: scroll horizontal */
+@media (min-width: 769px) {
+    .day-column {
+        width: 115px !important;
+        height: 90px !important;
+    }
+    
+    .days-container {
+        width: 1150px; /* 10 días × 115px = 1150px */
+    }
+    
+    .days-grid {
+        width: 575px; /* Mostrar exactamente 5 días × 115px = 575px */
+    }
+}
+
+/* Responsive - Móvil: scroll horizontal más compacto */
+@media (max-width: 768px) {
+    html {
+        font-size: 18px; /* Reducido de 20px para mejor ajuste */
+    }
+    
+    body {
+        font-size: 1rem;
+    }
+    
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    .shift-info {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .shift-info h2 {
+        font-size: 1.2rem;
+    }
+    
+    .shift-details {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .shift-details span {
+        font-size: 0.95rem;
+        padding: 0.6rem 0.9rem;
+    }
+    
+    .forms-container {
+        margin: 0;
+    }
+    
+    .forms-container h3 {
+        font-size: 1.1rem;
+        padding: 1rem;
+    }
+    
+    .form-section {
+        padding: 0.75rem;
+    }
+    
+    .form-section h4 {
+        font-size: 1.05rem;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .question-text {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+    
+    .question-reference {
+        font-size: 0.85rem;
+    }
+    
+    .day-column {
+        width: 80px !important;
+        height: 70px !important;
+    }
+    
+    .days-container {
+        width: 800px; /* 10 días × 80px = 800px */
+    }
+    
+    .days-grid {
+        width: 240px !important; /* Mostrar exactamente 3 días × 80px = 240px */
+        max-width: 240px !important;
+    }
+    
+    .question-row {
+        padding: 1rem 0;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .question-row > div:first-child {
+        flex: none;
+        margin-right: 0;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+        padding: 0.5rem;
+    }
+    
+    .app-header {
+        padding: 0.5rem;
+    }
+    
+    .user-info {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    
+    .user-info span {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.25rem;
+        font-size: 0.85rem;
+    }
+    
+    .user-info .btn-secondary {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        white-space: nowrap;
+    }
+    
+    .ameco-logo {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 0.5rem;
+    }
+    
+    .ameco-logo-text-header {
+        width: 100%;
+        max-width: 180px;
+        padding: 0.3rem 0.8rem;
+    }
+    
+    .ameco-main-header {
+        font-size: 1.1rem;
+        letter-spacing: 3px;
+    }
+    
+    .ameco-sub-header {
+        font-size: 0.45rem;
+        letter-spacing: 1.5px;
+    }
+    
+    .ameco-logo span {
+        font-size: 0.85rem;
+    }
+    
+    /* Login logo mobile */
+    .login-container {
+        margin: 50px auto;
+        padding: 1.5rem;
+        max-width: 95%;
+    }
+    
+    .ameco-logo-text {
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto 1rem;
+        padding: 1.5rem 1rem;
+    }
+    
+    .ameco-main {
+        font-size: 2rem;
+        letter-spacing: 0.25rem;
+    }
+    
+    .ameco-sub {
+        font-size: 0.65rem;
+        letter-spacing: 0.2rem;
+    }
+    
+    .ameco-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .form-group label {
+        font-size: 0.95rem;
+    }
+    
+    .form-group input {
+        font-size: 0.95rem;
+        padding: 0.75rem;
+    }
+
+    .form-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-btn {
+        font-size: 0.85rem;
+        padding: 0.75rem;
+    }
+    
+    .day-header {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.1rem;
+        height: 25px;
+    }
+    
+    .day-options {
+        height: 45px;
+    }
+    
+    .digital-signature-preview {
+        max-width: 90%;
+        max-height: 35px;
+    }
+    
+    .signature-status-left {
+        font-size: 0.55rem;
+        min-width: 45px;
+    }
+    
+    .signature-grid-wrapper {
+        gap: 0.25rem;
+    }
+    
+    .btn-create-signature-inline {
+        font-size: 0.4rem;
+        padding: 0.15rem 0.25rem;
+    }
+    
+    /* Mobile radio button adjustments */
+    .option-group {
+        gap: 0.2rem;
+        padding: 0.15rem;
+    }
+    
+    .option-group input[type="radio"] {
+        width: 12px;
+        height: 12px;
+        margin-right: 0.15rem;
+        transform: scale(0.75);
+    }
+    
+    .option-group input[type="radio"]:hover {
+        transform: scale(0.85);
+    }
+    
+    .option-group input[type="radio"][value="si"]:checked::after,
+    .option-group input[type="radio"][value="no"]:checked::after {
+        font-size: 7px;
+    }
+    
+    .option-group label {
+        font-size: 0.65rem;
+    }
+    
+    .btn-primary, .btn-secondary, .btn-success {
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .accident-section h4 {
+        font-size: 1.05rem;
+        padding: 0.75rem;
+    }
+    
+    .info-text {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .info-text p {
+        font-size: 0.85rem;
+    }
+    
+    /* Supervisor interface mobile */
+    .supervisor-header {
+        padding: 1.5rem 1rem;
+    }
+    
+    .supervisor-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .supervisor-section-separator {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .supervisor-section-separator h3 {
+        font-size: 1.1rem;
+    }
+    
+    .filters-section {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .filter-group select {
+        min-width: auto;
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 0.65rem;
+    }
+    
+    .orders-header {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .orders-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .order-item {
+        padding: 1rem;
+    }
+    
+    .worker-name {
+        font-size: 1rem;
+    }
+    
+    .order-details {
+        font-size: 0.8rem;
+    }
+    
+    .order-status {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
+    }
+    
+    .order-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .btn-view, .btn-sign {
+        width: 100%;
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Form actions mobile */
+    .form-actions {
+        padding: 0.75rem;
+        margin-top: 1rem;
+    }
+    
+    .form-actions button {
+        margin: 0.25rem;
+        font-size: 0.85rem;
+        padding: 0.65rem 1rem;
+    }
+    
+    /* Modal mobile improvements */
+    .modal-content {
+        max-width: 95%;
+        padding: 1rem;
+    }
+    
+    .modal-content h3 {
+        font-size: 1.1rem;
+    }
+    
+    .modal-content select {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Signature modal mobile */
+    .signature-modal-content {
+        max-width: 95%;
+        margin: 0.5rem;
+    }
+    
+    .signature-modal-header {
+        padding: 1rem;
+    }
+    
+    .signature-modal-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .signature-modal-body {
+        padding: 1rem;
+    }
+    
+    .signature-canvas-container {
+        padding: 0.5rem;
+    }
+    
+    #signatureCanvas {
+        width: 100%;
+        max-width: 100%;
+        height: 120px;
+    }
+    
+    .signature-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .signature-actions button {
+        width: 100%;
+    }
+    
+    /* History table mobile */
+    .history-container {
+        padding: 1rem;
+    }
+    
+    .history-table {
+        font-size: 0.75rem;
+    }
+    
+    .history-table th,
+    .history-table td {
+        padding: 0.4rem;
+    }
+    
+    .btn-view-detail,
+    .btn-export-pdf {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    /* Derivation options mobile */
+    .derivation-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .radio-option {
+        padding: 10px 20px;
+    }
+    
+    .radio-option input[type="radio"] {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .radio-option span {
+        font-size: 1rem;
+    }
+    
+    /* Notification mobile */
+    .sse-notification {
+        top: 60px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        padding: 0.75rem 1rem;
+    }
+    
+    .sse-notification-content strong {
+        font-size: 1rem;
+    }
+    
+    .sse-notification-content p {
+        font-size: 0.85rem;
+    }
+}
+
+
+/* Signature Sections */
+.signature-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.signature-section h5 {
+    color: #004488;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid #004488;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.signature-section .question-row {
+    background-color: white;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.5rem 0;
+}
+
+.signature-section .question-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.signature-section .question-row:first-of-type {
+    padding-top: 0;
+}
+
+.accident-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.accident-section h4 {
+    color: #004488;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid #004488;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.accident-section .info-text {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #ffc107;
+}
+
+.accident-section .question-row {
+    background-color: white;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.5rem 0;
+}
+
+.accident-section .question-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.accident-section .question-row:first-of-type {
+    padding-top: 0;
+}
+
+.info-text {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #ffc107;
+}
+
+.info-text p {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #333;
+}
+
+.info-text p:last-child {
+    margin-bottom: 0;
+}
+
+.info-text p:first-child {
+    font-weight: bold;
+    color: #856404;
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.form-actions button {
+    margin: 0 0.5rem;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 6px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.modal-content h3 {
+    margin-bottom: 1rem;
+    color: #004488;
+    font-size: 1.2rem;
+}
+
+.modal-content select {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+/* Supervisor Interface */
+.supervisor-header {
+    background: linear-gradient(135deg, #004488 0%, #0066cc 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.supervisor-header h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.supervisor-header p {
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+.supervisor-section-separator {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.supervisor-section-separator h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.supervisor-section-separator p {
+    opacity: 0.9;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.filters-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 2rem;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-weight: bold;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.filter-group select {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    min-width: 200px;
+}
+
+.orders-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.orders-header {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.orders-header h3 {
+    color: #004488;
+    margin: 0;
+}
+
+.orders-header span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.orders-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.order-item {
+    padding: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s;
+}
+
+.order-item:hover {
+    background-color: #f8f9fa;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.worker-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.order-details {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.order-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-signed {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.order-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn-view {
+    background-color: #17a2b8;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.btn-view:hover {
+    background-color: #138496;
+}
+
+.btn-sign {
+    background-color: #28a745;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.btn-sign:hover {
+    background-color: #218838;
+}
+
+.btn-sign:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.empty-orders {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.empty-orders i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Rest period message */
+.rest-period-message {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    color: #333;
+    border-radius: 12px;
+    margin: 2rem auto;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e0e0e0;
+}
+
+.rest-period-message h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #004488;
+}
+
+.rest-period-message p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+    color: #555;
+}
+
+.rest-period-message strong {
+    color: #004488;
+    font-weight: 600;
+}
+
+/* Order Detail Modal */
+.order-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow-y: auto;
+}
+
+.order-modal.show {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.order-modal-content {
+    background: white;
+    border-radius: 8px;
+    max-width: 1000px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.order-modal-header {
+    background-color: #004488;
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-modal-header h3 {
+    margin: 0;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.order-modal-body {
+    padding: 2rem;
+}
+
+.order-detail-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.detail-section {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 6px;
+    border-left: 4px solid #004488;
+}
+
+.detail-section h4 {
+    color: #004488;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.detail-section p {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-responses {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.response-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.response-item .question {
+    font-weight: 500;
+    color: #333;
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.response-item .answer {
+    font-weight: bold;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+}
+
+.answer-yes {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.answer-no {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.signature-section-supervisor {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin-top: 2rem;
+    border-left: 4px solid #004488;
+}
+
+.signature-section-supervisor h4 {
+    color: #004488;
+    margin-bottom: 1rem;
+}
+
+.signature-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.signed-info {
+    display: flex;
+    align-items: center;
+}
+
+.signed-info .status-signed {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: 1px solid #c3e6cb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .filters-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group select {
+        min-width: auto;
+    }
+    
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .order-actions {
+        flex-direction: column;
+    }
+    
+    .order-modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+    
+    .order-modal.show {
+        padding: 1rem;
+    }
+    
+    .response-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .response-item .question {
+        margin-right: 0;
+    }
+    
+    .signature-actions {
+        flex-direction: column;
+    }
+}
+
+/* Digital Signature Modal */
+.signature-modal-content {
+    max-width: 600px;
+    width: 90%;
+}
+
+.signature-modal-header {
+    background-color: #004488;
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px 6px 0 0;
+}
+
+.signature-modal-header h3 {
+    margin: 0;
+}
+
+.signature-modal-body {
+    padding: 2rem;
+}
+
+.signature-status {
+    margin-bottom: 2rem;
+}
+
+.signature-preview {
+    text-align: center;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+.signature-preview img {
+    max-width: 200px;
+    max-height: 80px;
+    border: 1px solid #ccc;
+    background-color: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.signature-info {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.signature-creation h4 {
+    color: #004488;
+    margin-bottom: 1rem;
+}
+
+.signature-canvas-container {
+    border: 2px solid #004488;
+    border-radius: 6px;
+    background-color: white;
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden;
+}
+
+#signatureCanvas {
+    border: 1px dashed #ccc;
+    cursor: crosshair;
+    background-color: white;
+    touch-action: none; /* Prevent scrolling while drawing on mobile */
+    max-width: 100%;
+    height: auto;
+}
+
+.signature-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.signature-management-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.btn-create-signature {
+    background-color: #28a745;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-create-signature:hover {
+    background-color: #218838;
+}
+
+.btn-update-signature {
+    background-color: #ffc107;
+    color: #212529;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-update-signature:hover {
+    background-color: #e0a800;
+}
+
+.btn-delete-signature {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-delete-signature:hover {
+    background-color: #c82333;
+}
+
+.no-signature-message {
+    text-align: center;
+    padding: 2rem;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    color: #856404;
+}
+
+.no-signature-message h4 {
+    color: #856404;
+    margin-bottom: 1rem;
+}
+
+/* Supervisor section styling */
+.supervisor-group {
+    margin: 1rem 0;
+    border-left: 4px solid #004488;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.supervisor-header {
+    background-color: #004488;
+    color: white;
+    padding: 0.75rem 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+.supervisor-sub-row {
+    background-color: white;
+    border-bottom: 1px solid #e9ecef;
+    margin: 0;
+}
+
+.supervisor-sub-row:last-child {
+    border-bottom: none;
+}
+
+.supervisor-sub-text {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+.supervisor-section {
+    flex-direction: column;
+}
+
+.supervisor-section > div:first-child {
+    flex: none;
+    margin-right: 0;
+    margin-bottom: 1rem;
+}
+
+.supervisor-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+.supervisor-signature,
+.supervisor-derivation {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.supervisor-label {
+    font-weight: bold;
+    color: #004488;
+    min-width: 120px;
+    font-size: 0.9rem;
+    padding-top: 0.5rem;
+}
+
+.supervisor-signature .days-grid,
+.supervisor-derivation .days-grid {
+    flex: 1;
+    max-width: 575px;
+}
+
+/* Responsive supervisor section */
+@media (max-width: 768px) {
+    .supervisor-signature,
+    .supervisor-derivation {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .supervisor-label {
+        min-width: auto;
+        padding-top: 0;
+    }
+    
+    .supervisor-header {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .supervisor-sub-text {
+        font-size: 0.85rem;
+    }
+}
+
+/* Responsive signature modal */
+@media (max-width: 768px) {
+    .signature-modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto; /* Permitir scroll vertical */
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .modal.show {
+        align-items: flex-start; /* Cambiar de center a flex-start para permitir scroll */
+        overflow-y: auto; /* Permitir scroll en el modal */
+        padding: 1rem 0; /* Agregar padding vertical */
+    }
+    
+    .signature-canvas-container {
+        padding: 0.5rem;
+    }
+    
+    #signatureCanvas {
+        width: 100%;
+        max-width: 350px;
+        height: 120px;
+    }
+}
+
+/* Operations Manager Tabs */
+.operations-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.operations-tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.operations-tab-btn:hover {
+    color: #004488;
+    background-color: #f0f0f0;
+}
+
+.operations-tab-btn.active {
+    color: #004488;
+    border-bottom-color: #004488;
+    font-weight: bold;
+}
+
+.operations-tab-content {
+    display: none;
+}
+
+.operations-tab-content.active {
+    display: block;
+}
+
+/* Audit Section */
+.audit-header {
+    margin-bottom: 1.5rem;
+}
+
+.audit-header h3 {
+    color: #004488;
+    margin-bottom: 0.5rem;
+}
+
+.audit-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    border-left: 4px solid #ffc107;
+    margin-top: 0.5rem;
+}
+
+.audit-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #004488;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.audit-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.audit-table-wrapper {
+    overflow-x: auto;
+}
+
+.audit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.audit-table thead {
+    background-color: #004488;
+    color: white;
+}
+
+.audit-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.audit-table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+.audit-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.audit-table td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+}
+
+.audit-status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.audit-status-signed {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.audit-status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.audit-status-not-signed {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.btn-view-audit {
+    padding: 0.5rem 1rem;
+    background-color: #004488;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-view-audit:hover {
+    background-color: #003366;
+}
+
+/* Responsive Audit Table */
+@media (max-width: 768px) {
+    .audit-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .audit-table {
+        font-size: 0.8rem;
+    }
+    
+    .audit-table th,
+    .audit-table td {
+        padding: 0.5rem;
+    }
+    
+    .operations-tabs {
+        flex-direction: column;
+    }
+    
+    .operations-tab-btn {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+/* Empty state for audit */
+.audit-empty {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.audit-empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+/* Mandatory Notice */
+.mandatory-notice {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #ffc107;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .mandatory-notice {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
+}
+
+/* Fix for text overlapping signatures */
+.question-row {
+    position: relative;
+    z-index: 1;
+}
+
+.question-text {
+    background-color: white;
+    position: relative;
+    z-index: 2;
+}
+
+.days-grid {
+    position: relative;
+    z-index: 3;
+}
+
+.digital-signature-container {
+    position: relative;
+    z-index: 4;
+    background-color: white;
+}
+
+.digital-signature-preview {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    background-color: white;
+}
+
+/* Ensure signature status text doesn't overlap */
+.signature-status-left {
+    background-color: white;
+    z-index: 5;
+}
+
+/* Custom Alert Modal */
+.custom-alert-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.custom-alert-modal.show {
+    display: flex;
+}
+
+.custom-alert-content {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+    text-align: center;
+}
+
+.custom-alert-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.custom-alert-icon.success {
+    color: #28a745;
+}
+
+.custom-alert-icon.error {
+    color: #dc3545;
+}
+
+.custom-alert-icon.warning {
+    color: #ffc107;
+}
+
+.custom-alert-icon.info {
+    color: #17a2b8;
+}
+
+.custom-alert-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.custom-alert-message {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    white-space: pre-line;
+}
+
+.custom-alert-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.custom-alert-btn {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #004488;
+    color: white;
+}
+
+.custom-alert-btn:hover {
+    background-color: #003366;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 68, 136, 0.3);
+}
+
+.custom-alert-btn:active {
+    transform: translateY(0);
+}
+
+.custom-alert-btn-cancel {
+    background-color: #6c757d;
+}
+
+.custom-alert-btn-cancel:hover {
+    background-color: #545b62;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .custom-alert-content {
+        padding: 1.5rem;
+        max-width: 90%;
+    }
+    
+    .custom-alert-icon {
+        font-size: 3rem;
+    }
+    
+    .custom-alert-title {
+        font-size: 1.25rem;
+    }
+    
+    .custom-alert-message {
+        font-size: 0.9rem;
+    }
+    
+    .custom-alert-btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Form Navigation Buttons */
+.form-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 1.5rem 0;
+    border-top: 2px solid #e0e0e0;
+}
+
+.btn-next,
+.btn-prev {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-next {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.btn-next:hover {
+    background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btn-prev {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+}
+
+.btn-prev:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+    transform: translateX(-5px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.btn-next:active,
+.btn-prev:active {
+    transform: scale(0.98);
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-navigation {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .btn-next,
+    .btn-prev {
+        width: 100%;
+        justify-content: center;
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .btn-next:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-prev:hover {
+        transform: translateY(-2px);
+    }
+}
+
+/* Inline Save Button in Fatigue Form */
+.form-actions-inline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 2px dashed #004488;
+}
+
+.btn-save-large {
+    padding: 1.25rem 3rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #004488 0%, #0066cc 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 68, 136, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-save-large:hover {
+    background: linear-gradient(135deg, #003366 0%, #0055aa 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 68, 136, 0.4);
+}
+
+.btn-save-large:active {
+    transform: translateY(-1px);
+}
+
+.save-hint {
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 0;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-actions-inline {
+        padding: 1.5rem;
+    }
+    
+    .btn-save-large {
+        width: 100%;
+        justify-content: center;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+    
+    .save-hint {
+        font-size: 0.85rem;
+    }
+}
+
+
+/* ============================================
+   HISTORY INTERFACE STYLES
+   ============================================ */
+
+.history-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.history-header h2 {
+    color: #004488;
+    margin-bottom: 0.5rem;
+}
+
+.history-header p {
+    color: #666;
+}
+
+.history-container {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.history-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+
+.history-table-wrapper {
+    overflow-x: auto;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.history-table thead {
+    background-color: #004488;
+    color: white;
+}
+
+.history-table th,
+.history-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.history-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.history-table .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.history-table .status-complete {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.history-table .status-incomplete {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.date-input {
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.btn-export-pdf {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+
+.btn-export-pdf:hover {
+    background-color: #c82333;
+}
+
+.btn-view-detail {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.btn-view-detail:hover {
+    background-color: #138496;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .history-stats {
+        flex-direction: column;
+    }
+    
+    .history-table {
+        font-size: 0.85rem;
+    }
+    
+    .history-table th,
+    .history-table td {
+        padding: 0.5rem;
+    }
+}
+
+
+/* ============================================
+   REAL-TIME NOTIFICATIONS (SSE)
+   ============================================ */
+
+.sse-notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: linear-gradient(135deg, #004488 0%, #0066cc 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 68, 136, 0.3);
+    z-index: 10000;
+    animation: slideInRight 0.3s ease-out;
+    max-width: 350px;
+}
+
+.sse-notification-content strong {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.sse-notification-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.95;
+}
+
+.sse-notification.fade-out {
+    animation: slideOutRight 0.5s ease-in forwards;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sse-notification {
+        top: 60px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
+
+/* Estilos para la pregunta de derivación del supervisor */
+.supervisor-evaluation-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #004488;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 25px;
+    box-shadow: 0 2px 8px rgba(0, 68, 136, 0.1);
+}
+
+.supervisor-evaluation-section h4 {
+    color: #004488;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+
+.supervisor-question {
+    background: white;
+    border-left: 4px solid #004488;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.supervisor-question .question-text {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.supervisor-question .question-reference {
+    color: #666;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+.derivation-question {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #004488;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 68, 136, 0.1);
+}
+
+.derivation-label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    color: #004488;
+    font-weight: 600;
+}
+
+.derivation-label span {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85em;
+    color: #666;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.derivation-options {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    justify-content: center;
+}
+
+.radio-option:hover {
+    border-color: #004488;
+    background: #f0f8ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 68, 136, 0.15);
+}
+
+.radio-option input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #004488;
+}
+
+.radio-option input[type="radio"]:checked + span {
+    font-weight: bold;
+    color: #004488;
+}
+
+.radio-option span {
+    font-size: 1.1em;
+    color: #333;
+}
+
+.derivation-result {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 2px solid #28a745;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.15);
+}
+
+.derivation-result p {
+    margin: 0;
+    font-size: 1.15em;
+    color: #155724;
+    font-weight: 600;
+}
+
+
+/* ============================================
+   MODAL STYLES - Ventanas emergentes centradas
+   ============================================ */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalFadeIn 0.3s ease-out;
+    position: relative;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 2px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #004488 0%, #0066cc 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1;
+    padding: 0;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 2px solid #e9ecef;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .modal-overlay {
+        padding: 10px;
+    }
+    
+    .modal-content {
+        max-width: 95%;
+        width: 100%;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .modal-footer {
+        padding: 15px;
+    }
+    
+    .modal-footer button {
+        flex: 1;
+        min-width: 100px;
+    }
+}
+
+
+/* ============================================
+   MEJORAS ADICIONALES PARA MÓVILES
+   ============================================ */
+
+/* Mejorar áreas táctiles en móvil */
+@media (max-width: 768px) {
+    /* Asegurar que todos los botones sean fáciles de tocar */
+    button, .btn-primary, .btn-secondary, .btn-success, .btn-view, .btn-sign {
+        min-height: 44px; /* Tamaño mínimo recomendado para táctil */
+        min-width: 44px;
+    }
+    
+    /* Mejorar espaciado entre elementos interactivos */
+    .order-actions button {
+        margin: 0.25rem 0;
+    }
+    
+    /* Hacer que los inputs sean más grandes en móvil */
+    input[type="text"],
+    input[type="password"],
+    select,
+    textarea {
+        min-height: 44px;
+        font-size: 16px; /* Prevenir zoom en iOS */
+    }
+    
+    /* Mejorar la tabla de historial en móvil */
+    .history-table-wrapper {
+        -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+    }
+    
+    /* Mejorar scroll de días en móvil */
+    .days-grid {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Prevenir zoom accidental en inputs */
+    input:focus,
+    select:focus,
+    textarea:focus {
+        font-size: 16px;
+    }
+    
+    /* Mejorar visibilidad de estados activos en móvil */
+    button:active,
+    .btn-primary:active,
+    .btn-secondary:active,
+    .btn-success:active {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    
+    /* Mejorar el canvas de firma en móvil */
+    #signatureCanvas {
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    
+    /* Ocultar scrollbar en móvil pero mantener funcionalidad */
+    .days-grid::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    /* Mejorar contraste de texto en móvil */
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Prevenir selección de texto accidental */
+    .day-header,
+    .order-status,
+    .status-badge {
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    
+    /* Mejorar rendimiento de animaciones en móvil */
+    * {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Asegurar que los modales sean scrolleables en móvil */
+    .modal-overlay,
+    .order-modal {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Mejorar el espaciado del contenido principal */
+    .forms-container {
+        margin-bottom: 2rem; /* Espacio para el scroll */
+    }
+    
+    /* Hacer que las pestañas sean más fáciles de tocar */
+    .tab-btn {
+        min-height: 48px;
+    }
+    
+    /* Mejorar la visualización de las opciones de derivación */
+    .derivation-options {
+        width: 100%;
+    }
+    
+    .radio-option {
+        min-height: 48px;
+    }
+    
+    /* Asegurar que el header no se superponga con el contenido */
+    .main-content {
+        padding-top: 1rem;
+    }
+    
+    /* Mejorar la visualización de notificaciones en móvil */
+    .sse-notification {
+        animation: slideInDown 0.3s ease-out;
+    }
+    
+    @keyframes slideInDown {
+        from {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    /* Mejorar el espaciado de las secciones */
+    .supervisor-evaluation-section,
+    .derivation-question,
+    .accident-section {
+        margin: 1rem 0;
+    }
+    
+    /* Hacer que los checkboxes sean más grandes */
+    input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+    
+    /* Mejorar la visualización de las firmas en móvil */
+    .signature-preview img {
+        max-width: 150px;
+        max-height: 60px;
+    }
+    
+    /* Asegurar que los botones de acción estén siempre visibles */
+    .form-actions {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        z-index: 100;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Mejorar el contraste de los estados */
+    .status-pending {
+        border-width: 2px;
+    }
+    
+    .status-signed {
+        border-width: 2px;
+    }
+    
+    /* Hacer que los enlaces y botones sean más visibles */
+    a, button {
+        -webkit-tap-highlight-color: rgba(0, 68, 136, 0.2);
+    }
+    
+    /* Mejorar la legibilidad en pantallas pequeñas */
+    p, li, span {
+        line-height: 1.5;
+    }
+    
+    /* Asegurar que las imágenes no se desborden */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Mejorar el espaciado de los filtros */
+    .filters-section {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Hacer que las tablas sean más legibles */
+    .history-table,
+    .audit-table {
+        white-space: nowrap;
+    }
+    
+    /* Mejorar la visualización de las estadísticas */
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    /* Asegurar que el footer de los modales sea visible */
+    .modal-footer {
+        position: sticky;
+        bottom: 0;
+        background: #f8f9fa;
+        z-index: 10;
+    }
+}
+
+/* Mejoras para pantallas muy pequeñas (< 375px) */
+@media (max-width: 374px) {
+    html {
+        font-size: 16px;
+    }
+    
+    .login-container {
+        padding: 1rem;
+    }
+    
+    .ameco-main {
+        font-size: 1.8rem;
+    }
+    
+    .day-column {
+        width: 70px !important;
+    }
+    
+    .days-container {
+        width: 700px;
+    }
+    
+    .days-grid {
+        width: 210px !important;
+        max-width: 210px !important;
+    }
+    
+    .question-text {
+        font-size: 0.9rem;
+    }
+    
+    .btn-primary,
+    .btn-secondary,
+    .btn-success {
+        font-size: 0.85rem;
+        padding: 0.7rem 0.9rem;
+    }
+}
+
+/* Mejoras para tablets en orientación portrait */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .main-content {
+        max-width: 900px;
+        padding: 1.5rem;
+    }
+    
+    .days-grid {
+        width: 460px; /* 4 días × 115px */
+    }
+    
+    .question-row {
+        flex-direction: row;
+    }
+    
+    .filters-section {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+/* Optimizaciones de rendimiento para móviles */
+@media (max-width: 768px) {
+    /* Reducir animaciones complejas en móvil */
+    * {
+        animation-duration: 0.2s !important;
+        transition-duration: 0.2s !important;
+    }
+    
+    /* Optimizar el rendering */
+    .modal-overlay,
+    .custom-alert-modal {
+        will-change: opacity;
+    }
+    
+    .modal-content,
+    .custom-alert-content {
+        will-change: transform;
+    }
+}

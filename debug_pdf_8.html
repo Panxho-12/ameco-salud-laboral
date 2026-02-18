@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 12px;
+            background: white;
+            color: #333;
+            font-size: 10px;
+        }
+        
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 2px solid #004488;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .logo-container {
+            margin-bottom: 8px;
+        }
+        
+        .header-content {
+            width: 100%;
+        }
+        
+        .title {
+            font-size: 13px;
+            color: #004488;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .subtitle {
+            font-size: 12px;
+            color: #004488;
+            font-weight: bold;
+        }
+        
+        .info-section {
+            background: #f8f9fa;
+            padding: 6px 10px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            border-left: 2px solid #004488;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2px;
+            font-size: 9.5px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #004488;
+        }
+        
+        .info-value {
+            color: #333;
+        }
+        
+        .section {
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            background: #004488;
+            color: white;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 3px;
+            margin-bottom: 6px;
+        }
+        
+        .question-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 5px 8px;
+            margin-bottom: 4px;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .question-text {
+            flex: 1;
+            color: #333;
+            font-size: 9px;
+        }
+        
+        .answer {
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 9px;
+            min-width: 38px;
+            text-align: center;
+        }
+        
+        .answer-yes {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #28a745;
+        }
+        
+        .answer-no {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #dc3545;
+        }
+        
+        .signatures-section {
+            margin-top: 12px;
+            page-break-inside: avoid;
+        }
+        
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .signature-box {
+            border: 1px solid #004488;
+            border-radius: 3px;
+            padding: 6px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+        
+        .signature-label {
+            font-weight: bold;
+            color: #004488;
+            margin-bottom: 4px;
+            font-size: 10px;
+        }
+        
+        .signature-image {
+            max-width: 100%;
+            max-height: 40px;
+            margin: 4px 0;
+            border: 1px solid #dee2e6;
+            background: white;
+            padding: 2px;
+        }
+        
+        .signature-name {
+            font-size: 8px;
+            color: #666;
+            margin-top: 3px;
+        }
+        
+        .signature-status {
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 8px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 3px;
+        }
+        
+        .status-signed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        @media print {
+            body {
+                padding: 10px;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <svg width="140" height="65" viewBox="0 0 1024 300" xmlns="http://www.w3.org/2000/svg">
+                <!-- Fondo azul oscuro -->
+                <rect x="0" y="0" width="1024" height="300" fill="#1e3a5f"/>
+                <!-- Franja roja inferior ondulada -->
+                <path d="M 0 200 Q 256 180 512 200 T 1024 200 L 1024 300 L 0 300 Z" fill="#d32f2f"/>
+                <!-- Texto AMECO en blanco -->
+                <text x="512" y="170" font-family="Arial Black, sans-serif" font-size="150" font-weight="900" fill="white" text-anchor="middle" letter-spacing="10">AMECO</text>
+            </svg>
+        </div>
+        <div class="header-content">
+            <div class="title">Estándar de Salud en el Trabajo</div>
+            <div class="subtitle">FORMULARIO DE SALUD LABORAL</div>
+        </div>
+    </div>
+    
+    <div class="info-section">
+        <div class="info-row">
+            <span class="info-label">Usuario:</span>
+            <span class="info-value">Rossel Guerra Jonnathan Alexander</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Tipo:</span>
+            <span class="info-value">Operador</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Turno:</span>
+            <span class="info-value">B</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">D&iacute;a:</span>
+            <span class="info-value">5 de 10</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Fecha:</span>
+            <span class="info-value">18-02-2026</span>
+        </div>
+    </div>
+    
+    
+    <div class="section">
+        <div class="section-title">Condiciones de Salud</div>
+        
+                <div class="question-item">
+                    <div class="question-text">&iquest;Se encuentra usted con conocimiento adecuado y capacidad para realizar las tareas asignadas?</div>
+                    <div class="answer answer-yes">SÍ</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Padece de alguna enfermedad o molestia f&iacute;sica?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Presenta factores externos que le impidan estar concentrado?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Qu&eacute; ha sufrido hay alg&uacute;n accidente con lesi&oacute;n?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+    </div>
+    
+    
+    
+    <div class="section">
+        <div class="section-title">Fatiga y Somnolencia</div>
+        
+                <div class="question-item">
+                    <div class="question-text">&iquest;Ha tenido dificultades en lograr un descanso reparador?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Presenta alg&uacute;n s&iacute;ntoma que dificulte su buen dormir?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Sufre de insomnio &uacute;ltimamente?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Durmi&oacute; menos tiempo del necesario durante su &uacute;ltimo per&iacute;odo de sue&ntilde;o?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Est&aacute; consumiendo alg&uacute;n medicamento que provoque o cause somnolencia?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Padece alguna enfermedad que produzca cansancio o somnolencia?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Existen factores externos que afecten la calidad de su sue&ntilde;o?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Ha presentado eventos importantes de somnolencia?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+    </div>
+    
+    
+    
+    <div class="section">
+        <div class="section-title">Evaluaci&oacute;n del Supervisor</div>
+        <div class="question-item">
+            <div class="question-text" style="font-weight: bold;">&iquest;Requiere Derivaci&oacute;n?</div>
+            <div class="answer answer-yes">
+                SÍ
+            </div>
+        </div>
+        
+            <div style="background: #f8f9fa; padding: 6px; border-radius: 3px; margin-top: 5px; border: 1px solid #dee2e6;">
+                <div style="font-size: 8px; font-weight: bold; color: #004488; margin-bottom: 3px;">Nota del Supervisor:</div>
+                <div style="font-size: 8px; color: #333;">Operador no durmio bien</div>
+            </div>
+        
+        <div style="font-size: 8px; color: #666; margin-top: 3px; padding: 3px;">
+            <em>Evaluaci&oacute;n realizada por el supervisor.</em>
+        </div>
+    </div>
+    
+    
+    
+    <div class="section">
+        <div class="section-title" style="background: #28a745;">✓ Revisi&oacute;n del Prevencionista</div>
+        <div style="background: #d4edda; padding: 8px; border-radius: 3px; border: 1px solid #28a745;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 8px;">
+                    <strong>Estado:</strong> <span style="color: #28a745; font-weight: bold;">✓ Caso Revisado</span>
+                </div>
+            </div>
+            <div style="font-size: 8px; margin-bottom: 3px;">
+                <strong>Revisado por:</strong> N/A
+            </div>
+            <div style="font-size: 8px; margin-bottom: 5px;">
+                <strong>Fecha:</strong> 18-02-2026, 1:48:55 p. m.
+            </div>
+            
+        </div>
+        <div style="font-size: 7px; color: #666; margin-top: 3px; padding: 3px;">
+            <em>Revisi&oacute;n realizada por el profesional OHSEM (Prevencionista).</em>
+        </div>
+    </div>
+    
+    
+    <div class="signatures-section">
+        <div class="section-title">Firmas Digitales</div>
+        <div class="signatures-grid">
+            
+                <div class="signature-box">
+                    <div class="signature-label">Trabajador</div>
+                    <img src="data:image/png;base64,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" class="signature-image" alt="Firma Trabajador">
+                    <div class="signature-name">Rossel Guerra Jonnathan Alexander</div>
+                </div>
+                
+                <div class="signature-box">
+                    <div class="signature-label">Supervisor</div>
+                    <img src="data:image/png;base64,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" class="signature-image" alt="Firma Supervisor">
+                    <div class="signature-name">Duran Zepeda Rodrigo Alejandro</div>
+                </div>
+            
+        </div>
+    </div>
+</body>
+</html>
+    

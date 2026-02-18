@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>AMECO - Sistema de Salud Laboral</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="login-container">
+                <div class="ameco-header">
+                    <div class="ameco-logo-text">
+                        <div class="ameco-main">AMECO</div>
+                        <div class="ameco-sub">SOUTH AMERICA</div>
+                    </div>
+                    <h1>Estándar de Salud en el Trabajo</h1>
+                </div>
+                
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Usuario:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Iniciar Sesión</button>
+                </form>
+                
+                <div id="loginError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboardScreen" class="screen">
+            <header class="app-header">
+                <div class="header-content">
+                    <div class="ameco-logo">
+                        <svg width="120" height="50" viewBox="0 0 1024 300" xmlns="http://www.w3.org/2000/svg" style="margin-right: 15px;">
+                            <rect x="0" y="0" width="1024" height="300" fill="#1e3a5f"/>
+                            <path d="M 0 200 Q 256 180 512 200 T 1024 200 L 1024 300 L 0 300 Z" fill="#d32f2f"/>
+                            <text x="512" y="170" font-family="Arial Black, sans-serif" font-size="150" font-weight="900" fill="white" text-anchor="middle" letter-spacing="10">AMECO</text>
+                        </svg>
+                        <span>Estándar de Salud en el Trabajo</span>
+                    </div>
+                    <div class="user-info">
+                        <span id="userName"></span>
+                        <button id="historyBtn" class="btn-secondary">📚 Historial</button>
+                        <button id="manageSignatureBtn" class="btn-secondary">✍️ Mi Firma</button>
+                        <button id="logoutBtn" class="btn-secondary">Cerrar Sesión</button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <!-- Interfaz del Trabajador -->
+                <div id="workerInterface">
+                    <div class="shift-info">
+                        <h2>Turno Actual</h2>
+                        <div class="shift-details">
+                            <span id="shiftNumber">Turno #1</span>
+                            <span id="currentDay">Día 1 de 10</span>
+                        </div>
+                    </div>
+
+                    <div class="forms-container">
+                        <div class="mandatory-notice">
+                            ⚠️ IMPORTANTE: Ambos formularios son OBLIGATORIOS. Debe completar todas las preguntas de "Condiciones de Salud" Y "Fatiga y Somnolencia" antes de guardar.
+                        </div>
+                        
+                        <div class="form-tabs">
+                            <button class="tab-btn active" data-form="conditions">Condiciones de Salud</button>
+                            <button class="tab-btn" data-form="fatigue">Fatiga y Somnolencia</button>
+                        </div>
+
+                        <!-- Formulario 1: Condiciones de Salud -->
+                        <div id="conditionsForm" class="form-content active">
+                            <h3>Registro de Denuncia por Condición de Salud del Trabajador</h3>
+                            <div class="form-section">
+                                <div id="conditionsQuestions"></div>
+                            </div>
+                            <div class="form-navigation">
+                                <button class="btn-next" onclick="app.goToNextForm('fatigue')">
+                                    Siguiente: Fatiga y Somnolencia →
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Formulario 2: Fatiga y Somnolencia -->
+                        <div id="fatigueForm" class="form-content">
+                            <h3>Cuestionario Breve de Detección de Fatiga y Somnolencia</h3>
+                            <div class="form-section">
+                                <div id="fatigueQuestions"></div>
+                            </div>
+                            <div class="form-navigation">
+                                <button class="btn-prev" onclick="app.goToPrevForm('conditions')">
+                                    ← Anterior: Condiciones de Salud
+                                </button>
+                            </div>
+                            
+                            <!-- Botón Guardar Día al final del formulario de Fatiga -->
+                            <div class="form-actions-inline">
+                                <button id="saveBtnInline" class="btn-primary btn-save-large">
+                                    💾 Guardar Día Completo
+                                </button>
+                                <p class="save-hint">Complete ambos formularios antes de guardar</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="viewMyDetailsBtn" class="btn-secondary">👁️ Ver Mis Detalles</button>
+                        <button id="completeShiftBtn" class="btn-success" style="display: none;">Completar Turno</button>
+                    </div>
+                </div>
+
+                <!-- Interfaz del Supervisor -->
+                <div id="supervisorInterface" style="display: none;">
+                    <div class="supervisor-section-separator">
+                        <h3>📋 Revisión de Formularios de Trabajadores</h3>
+                        <p>Como supervisor, puedes revisar y firmar los formularios completados por los trabajadores</p>
+                    </div>
+
+                    <div class="filters-section">
+                        <div class="filter-group">
+                            <label for="statusFilter">Estado:</label>
+                            <select id="statusFilter">
+                                <option value="all">Todos</option>
+                                <option value="pending">Pendientes de Firma</option>
+                                <option value="signed">Firmados</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="workerFilter">Trabajador:</label>
+                            <select id="workerFilter">
+                                <option value="all">Todos los trabajadores</option>
+                            </select>
+                        </div>
+                        <button id="refreshOrdersBtn" class="btn-secondary">🔄 Actualizar</button>
+                        <button id="markAllNoBtn" class="btn-secondary" style="background: #6c757d;">✓ Marcar Todos NO</button>
+                        <button id="signAllOrdersBtn" class="btn-success">✍️ Firmar Todos los Pendientes</button>
+                    </div>
+
+                    <div class="orders-container">
+                        <div class="orders-header">
+                            <h3>Órdenes de Salud Laboral</h3>
+                            <span id="ordersCount">0 órdenes encontradas</span>
+                        </div>
+                        <div id="ordersList" class="orders-list">
+                            <!-- Las órdenes se cargarán aquí dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interfaz del Jefe de Operaciones -->
+                <div id="operationsManagerInterface" style="display: none;">
+                    <div class="supervisor-header">
+                        <h2>Panel de Jefe de Operaciones</h2>
+                        <p>Revisa y firma los formularios de salud de los supervisores</p>
+                    </div>
+
+                    <!-- Tabs para Órdenes y Auditoría -->
+                    <div class="operations-tabs">
+                        <button class="operations-tab-btn active" data-tab="orders">📋 Órdenes Pendientes</button>
+                        <button class="operations-tab-btn" data-tab="audit">📊 Registro de Auditoría</button>
+                    </div>
+
+                    <!-- Tab: Órdenes Pendientes -->
+                    <div id="operationsOrdersTab" class="operations-tab-content active">
+                        <div class="filters-section">
+                            <div class="filter-group">
+                                <label for="operationsManagerStatusFilter">Estado:</label>
+                                <select id="operationsManagerStatusFilter">
+                                    <option value="all">Todos</option>
+                                    <option value="pending">Pendientes de Firma</option>
+                                    <option value="signed">Firmados</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="operationsManagerSupervisorFilter">Supervisor:</label>
+                                <select id="operationsManagerSupervisorFilter">
+                                    <option value="all">Todos los supervisores</option>
+                                </select>
+                            </div>
+                            <button id="refreshOperationsManagerOrdersBtn" class="btn-secondary">🔄 Actualizar</button>
+                        </div>
+
+                        <div class="orders-container">
+                            <div class="orders-header">
+                                <h3>Órdenes de Supervisores</h3>
+                                <span id="operationsManagerOrdersCount">0 órdenes encontradas</span>
+                            </div>
+                            <div id="operationsManagerOrdersList" class="orders-list">
+                                <!-- Las órdenes se cargarán aquí dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Registro de Auditoría -->
+                    <div id="operationsAuditTab" class="operations-tab-content">
+                        <div class="audit-header">
+                            <h3>📊 Registro de Auditoría - Solo Lectura</h3>
+                            <p class="audit-warning">⚠️ Este registro es de solo lectura. No se pueden editar, borrar o agregar registros.</p>
+                        </div>
+
+                        <div class="filters-section">
+                            <div class="filter-group">
+                                <label for="auditRoleFilter">Tipo de Usuario:</label>
+                                <select id="auditRoleFilter">
+                                    <option value="all">Todos</option>
+                                    <option value="worker">Trabajadores</option>
+                                    <option value="supervisor">Supervisores</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="auditShiftFilter">Turno:</label>
+                                <select id="auditShiftFilter">
+                                    <option value="all">Todos</option>
+                                    <option value="A">Turno A</option>
+                                    <option value="B">Turno B</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="auditStatusFilter">Estado de Firmas:</label>
+                                <select id="auditStatusFilter">
+                                    <option value="all">Todos</option>
+                                    <option value="complete">Completamente Firmados</option>
+                                    <option value="incomplete">Incompletos</option>
+                                </select>
+                            </div>
+                            <button id="refreshAuditBtn" class="btn-secondary">🔄 Actualizar</button>
+                            <button id="exportAuditBtn" class="btn-primary">📥 Exportar a CSV</button>
+                        </div>
+
+                        <div class="audit-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalRecords">0</div>
+                                <div class="stat-label">Total Registros</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="completeRecords">0</div>
+                                <div class="stat-label">Completamente Firmados</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="incompleteRecords">0</div>
+                                <div class="stat-label">Incompletos</div>
+                            </div>
+                        </div>
+
+                        <div class="audit-container">
+                            <div class="audit-table-wrapper">
+                                <table id="auditTable" class="audit-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Usuario</th>
+                                            <th>Tipo</th>
+                                            <th>Turno</th>
+                                            <th>Día</th>
+                                            <th>Trabajador</th>
+                                            <th>Supervisor/Jefe</th>
+                                            <th>OHSEM</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="auditTableBody">
+                                        <!-- Los registros se cargarán aquí dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interfaz del Profesional OHSEM -->
+                <div id="ohsemInterface" style="display: none;">
+                    <div class="supervisor-header">
+                        <h2>Panel Profesional OHSEM - Casos con Derivación</h2>
+                        <p>Revisa los casos que requieren derivación marcados por los supervisores</p>
+                    </div>
+
+                    <div class="filters-section">
+                        <div class="filter-group">
+                            <label for="ohsemStatusFilter">Estado:</label>
+                            <select id="ohsemStatusFilter">
+                                <option value="all">Todos</option>
+                                <option value="pending">Pendientes de Firma</option>
+                                <option value="signed">Firmados</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="ohsemRoleFilter">Tipo:</label>
+                            <select id="ohsemRoleFilter">
+                                <option value="all">Todos</option>
+                                <option value="worker">Trabajadores</option>
+                                <option value="supervisor">Supervisores</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="ohsemUserFilter">Usuario:</label>
+                            <select id="ohsemUserFilter">
+                                <option value="all">Todos los usuarios</option>
+                            </select>
+                        </div>
+                        <button id="refreshOhsemOrdersBtn" class="btn-secondary">🔄 Actualizar</button>
+                    </div>
+
+                    <div class="orders-container">
+                        <div class="orders-header">
+                            <h3>Casos que Requieren Derivación</h3>
+                            <span id="ohsemOrdersCount">0 casos encontrados</span>
+                        </div>
+                        <div id="ohsemOrdersList" class="orders-list">
+                            <!-- Las órdenes se cargarán aquí dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interfaz de Historial -->
+                <div id="historyInterface" style="display: none;">
+                    <div class="history-header">
+                        <h2>📚 Historial de Formularios</h2>
+                        <p>Consulta y exporta formularios completados</p>
+                    </div>
+
+                    <div class="filters-section">
+                        <div class="filter-group">
+                            <label for="historyStartDate">Desde:</label>
+                            <input type="date" id="historyStartDate" class="date-input">
+                        </div>
+                        <div class="filter-group">
+                            <label for="historyEndDate">Hasta:</label>
+                            <input type="date" id="historyEndDate" class="date-input">
+                        </div>
+                        <div class="filter-group" id="historyUserFilterGroup" style="display: none;">
+                            <label for="historyUserFilter">Usuario:</label>
+                            <select id="historyUserFilter">
+                                <option value="all">Todos</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" id="historyRoleFilterGroup" style="display: none;">
+                            <label for="historyRoleFilter">Tipo:</label>
+                            <select id="historyRoleFilter">
+                                <option value="all">Todos</option>
+                                <option value="worker">Operadores</option>
+                                <option value="supervisor">Supervisores</option>
+                            </select>
+                        </div>
+                        <button id="searchHistoryBtn" class="btn-primary">🔍 Buscar</button>
+                        <button id="exportAllHistoryBtn" class="btn-success">📥 Exportar Seleccionados</button>
+                        <button id="backFromHistoryBtn" class="btn-secondary">← Volver</button>
+                    </div>
+
+                    <div class="history-container">
+                        <div class="history-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="historyTotalForms">0</div>
+                                <div class="stat-label">Formularios Encontrados</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="historyCompleteForms">0</div>
+                                <div class="stat-label">Completamente Firmados</div>
+                            </div>
+                        </div>
+
+                        <div class="history-table-wrapper">
+                            <table class="history-table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllHistory"></th>
+                                        <th>Fecha</th>
+                                        <th>Usuario</th>
+                                        <th>Tipo</th>
+                                        <th>Turno #</th>
+                                        <th>Día</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <!-- Los registros se cargarán aquí dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Complete Shift Modal -->
+        <div id="completeShiftModal" class="modal">
+            <div class="modal-content">
+                <h3>Completar Turno</h3>
+                <p>Seleccione el supervisor que firmará el turno:</p>
+                <select id="supervisorSelect">
+                    <option value="">Seleccionar supervisor...</option>
+                </select>
+                <div class="modal-actions">
+                    <button id="confirmCompleteBtn" class="btn-success">Confirmar</button>
+                    <button id="cancelCompleteBtn" class="btn-secondary">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Detail Modal -->
+        <div id="orderDetailModal" class="order-modal">
+            <div class="order-modal-content">
+                <div class="order-modal-header">
+                    <h3 id="orderModalTitle">Detalle de Orden</h3>
+                    <button class="close-modal" onclick="app.closeOrderDetail()">&times;</button>
+                </div>
+                <div class="order-modal-body" id="orderModalBody">
+                    <!-- Order details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Digital Signature Modal -->
+        <div id="signatureModal" class="modal">
+            <div class="modal-content signature-modal-content">
+                <div class="signature-modal-header">
+                    <h3>Gestión de Firma Digital</h3>
+                    <button class="close-modal" onclick="app.closeSignatureModal()">&times;</button>
+                </div>
+                <div class="signature-modal-body">
+                    <div id="signatureStatus" class="signature-status">
+                        <!-- Status will be loaded here -->
+                    </div>
+                    
+                    <div id="signatureCreation" class="signature-creation" style="display: none;">
+                        <h4>Crear Nueva Firma Digital</h4>
+                        <p>Dibuja tu firma en el área de abajo:</p>
+                        <div class="signature-canvas-container">
+                            <canvas id="signatureCanvas" width="400" height="150"></canvas>
+                        </div>
+                        <div class="signature-actions">
+                            <button id="clearSignatureBtn" class="btn-secondary">🗑️ Limpiar</button>
+                            <button id="saveSignatureBtn" class="btn-primary">💾 Guardar Firma</button>
+                            <button id="cancelSignatureBtn" class="btn-secondary">❌ Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Alert Modal -->
+        <div id="customAlertModal" class="custom-alert-modal">
+            <div class="custom-alert-content">
+                <div class="custom-alert-icon" id="customAlertIcon">
+                    <!-- Icon will be inserted here -->
+                </div>
+                <div class="custom-alert-title" id="customAlertTitle">
+                    <!-- Title will be inserted here -->
+                </div>
+                <div class="custom-alert-message" id="customAlertMessage">
+                    <!-- Message will be inserted here -->
+                </div>
+                <div class="custom-alert-actions">
+                    <button class="custom-alert-btn" id="customAlertBtn" onclick="app.closeCustomAlert()">
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=20260217-1633"></script>
+</body>
+</html>

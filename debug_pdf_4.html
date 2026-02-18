@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 10px;
+            background: white;
+            color: #333;
+            font-size: 11px;
+        }
+        
+        .header {
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 3px solid #004488;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-container {
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+        
+        .header-content {
+            flex: 1;
+        }
+        
+        .title {
+            font-size: 14px;
+            color: #004488;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .subtitle {
+            font-size: 13px;
+            color: #004488;
+            font-weight: bold;
+        }
+        
+        .info-section {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            border-left: 3px solid #004488;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+            font-size: 10px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #004488;
+        }
+        
+        .info-value {
+            color: #333;
+        }
+        
+        .section {
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            background: #004488;
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 3px;
+            margin-bottom: 8px;
+        }
+        
+        .question-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 6px 8px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .question-text {
+            flex: 1;
+            color: #333;
+            font-size: 10px;
+        }
+        
+        .answer {
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 10px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .answer-yes {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+        
+        .answer-no {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #28a745;
+        }
+        
+        .signatures-section {
+            margin-top: 15px;
+            page-break-inside: avoid;
+        }
+        
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .signature-box {
+            border: 2px solid #004488;
+            border-radius: 4px;
+            padding: 8px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+        
+        .signature-label {
+            font-weight: bold;
+            color: #004488;
+            margin-bottom: 5px;
+            font-size: 11px;
+        }
+        
+        .signature-image {
+            max-width: 100%;
+            max-height: 50px;
+            margin: 5px 0;
+            border: 1px solid #dee2e6;
+            background: white;
+            padding: 3px;
+        }
+        
+        .signature-name {
+            font-size: 9px;
+            color: #666;
+            margin-top: 3px;
+        }
+        
+        .signature-status {
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 3px;
+        }
+        
+        .status-signed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .footer {
+            margin-top: 15px;
+            padding-top: 8px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #666;
+            font-size: 9px;
+        }
+        
+        @media print {
+            body {
+                padding: 10px;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <svg width="150" height="70" viewBox="0 0 1024 300" xmlns="http://www.w3.org/2000/svg">
+                <!-- Fondo azul oscuro -->
+                <rect x="0" y="0" width="1024" height="300" fill="#1e3a5f"/>
+                <!-- Franja roja inferior ondulada -->
+                <path d="M 0 200 Q 256 180 512 200 T 1024 200 L 1024 300 L 0 300 Z" fill="#d32f2f"/>
+                <!-- Texto AMECO en blanco -->
+                <text x="512" y="170" font-family="Arial Black, sans-serif" font-size="150" font-weight="900" fill="white" text-anchor="middle" letter-spacing="10">AMECO</text>
+            </svg>
+        </div>
+        <div class="header-content">
+            <div class="title">Estándar de Salud en el Trabajo</div>
+            <div class="subtitle">FORMULARIO DE SALUD LABORAL</div>
+        </div>
+    </div>
+    
+    <div class="info-section">
+        <div class="info-row">
+            <span class="info-label">Usuario:</span>
+            <span class="info-value">Berrios Torres Darwin Daniel</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Tipo:</span>
+            <span class="info-value">Operador</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Turno:</span>
+            <span class="info-value">#1 - B</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">D&iacute;a:</span>
+            <span class="info-value">4 de 10</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Fecha:</span>
+            <span class="info-value">17-02-2026</span>
+        </div>
+    </div>
+    
+    
+    <div class="section">
+        <div class="section-title">Condiciones de Salud</div>
+        
+                <div class="question-item">
+                    <div class="question-text">&iquest;Se encuentra usted con conocimiento adecuado y capacidad para realizar las tareas asignadas?</div>
+                    <div class="answer answer-yes">SÍ</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Padece de alguna enfermedad o molestia f&iacute;sica?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Presenta factores externos que le impidan estar concentrado?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Qu&eacute; ha sufrido hay alg&uacute;n accidente con lesi&oacute;n?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+    </div>
+    
+    
+    
+    <div class="section">
+        <div class="section-title">Fatiga y Somnolencia</div>
+        
+                <div class="question-item">
+                    <div class="question-text">&iquest;Ha tenido dificultades en lograr un descanso reparador?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Presenta alg&uacute;n s&iacute;ntoma que dificulte su buen dormir?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Sufre de insomnio &uacute;ltimamente?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Durmi&oacute; menos tiempo del necesario durante su &uacute;ltimo per&iacute;odo de sue&ntilde;o?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Est&aacute; consumiendo alg&uacute;n medicamento que provoque o cause somnolencia?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Padece alguna enfermedad que produzca cansancio o somnolencia?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Existen factores externos que afecten la calidad de su sue&ntilde;o?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+                <div class="question-item">
+                    <div class="question-text">&iquest;Ha presentado eventos importantes de somnolencia?</div>
+                    <div class="answer answer-no">NO</div>
+                </div>
+            
+    </div>
+    
+    
+    <div class="signatures-section">
+        <div class="section-title">Firmas Digitales</div>
+        <div class="signatures-grid">
+            
+                <div class="signature-box">
+                    <div class="signature-label">Trabajador</div>
+                    <img src="data:image/png;base64,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" class="signature-image" alt="Firma Trabajador">
+                    <div class="signature-name">Berrios Torres Darwin Daniel</div>
+                </div>
+                
+                <div class="signature-box">
+                    <div class="signature-label">Supervisor</div>
+                    <img src="data:image/png;base64,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" class="signature-image" alt="Firma Supervisor">
+                    <div class="signature-name">Cifuentes Gomez Victor</div>
+                </div>
+            
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p><strong>AMECO SOUTH AMERICA</strong></p>
+        <p>Sistema de Gesti&oacute;n de Salud Laboral</p>
+        <p>Documento generado el 17-02-2026 a las 5:47:33 p. m.</p>
+    </div>
+</body>
+</html>
+    

@@ -1,0 +1,13 @@
+<svg width="860" height="400" viewBox="0 0 860 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background rectangle - Blue -->
+  <rect x="0" y="0" width="860" height="310" fill="#1a5490"/>
+  
+  <!-- Red stripe at bottom -->
+  <rect x="0" y="230" width="860" height="80" fill="#e31e24"/>
+  
+  <!-- AMECO text - White, bold -->
+  <text x="430" y="200" font-family="Arial, sans-serif" font-size="160" font-weight="900" fill="white" text-anchor="middle" letter-spacing="5">AMECO</text>
+  
+  <!-- SOUTH AMERICA text - Gray -->
+  <text x="430" y="370" font-family="Arial, sans-serif" font-size="48" font-weight="400" fill="#6b7c8f" text-anchor="middle" letter-spacing="12">SOUTH AMERICA</text>
+</svg>
