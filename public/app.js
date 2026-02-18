@@ -1,4 +1,6 @@
-// Version: 2026-02-17-12:10 - Fix Turno B rest detection
+// Version: 2026-02-18-17:45 - AUTO-SCROLL AL DÍA ACTUAL
+console.log('🚀 APP.JS CARGADO - Versión con auto-scroll 2026-02-18-17:45');
+
 class AmecoApp {
     constructor() {
         this.currentUser = null;
