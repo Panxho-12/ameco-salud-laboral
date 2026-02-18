@@ -365,8 +365,8 @@ class AmecoApp {
         await this.loadUserSignatureForForms();
         this.updateUI();
         
-        // Auto-scroll al día actual después de renderizar
-        setTimeout(() => this.scrollToCurrentDay(), 300);
+        // Auto-scroll al día actual después de renderizar (esperar más tiempo)
+        setTimeout(() => this.scrollToCurrentDay(), 800);
     }
 
     async showSupervisorDashboard() {
@@ -382,8 +382,8 @@ class AmecoApp {
         await this.loadUserSignatureForForms();
         this.updateUI();
         
-        // Auto-scroll al día actual después de renderizar
-        setTimeout(() => this.scrollToCurrentDay(), 300);
+        // Auto-scroll al día actual después de renderizar (esperar más tiempo)
+        setTimeout(() => this.scrollToCurrentDay(), 800);
         
         // Cargar órdenes pendientes para firmar
         await this.loadPendingOrders();
@@ -2269,25 +2269,32 @@ class AmecoApp {
     }
 
     scrollToCurrentDay() {
-        // Buscar el primer día actual en el DOM
-        const currentDayElement = document.querySelector('.day-column.current-day');
+        // Buscar TODOS los días actuales en el DOM (hay múltiples grids)
+        const currentDayElements = document.querySelectorAll('.day-column.current-day');
         
-        if (currentDayElement) {
-            // Obtener el contenedor de días (days-grid)
-            const daysGrid = currentDayElement.closest('.days-grid');
-            
-            if (daysGrid) {
-                // Calcular la posición para centrar el día actual
-                const dayColumnWidth = currentDayElement.offsetWidth;
-                const gridWidth = daysGrid.offsetWidth;
-                const scrollPosition = currentDayElement.offsetLeft - (gridWidth / 2) + (dayColumnWidth / 2);
+        if (currentDayElements.length > 0) {
+            // Hacer scroll en cada grid que contenga un día actual
+            currentDayElements.forEach(currentDayElement => {
+                // Obtener el contenedor de días (days-grid)
+                const daysGrid = currentDayElement.closest('.days-grid');
                 
-                // Hacer scroll suave al día actual
-                daysGrid.scrollTo({
-                    left: Math.max(0, scrollPosition),
-                    behavior: 'smooth'
-                });
-            }
+                if (daysGrid) {
+                    // Calcular la posición para centrar el día actual
+                    const dayColumnWidth = currentDayElement.offsetWidth;
+                    const gridWidth = daysGrid.offsetWidth;
+                    const scrollPosition = currentDayElement.offsetLeft - (gridWidth / 2) + (dayColumnWidth / 2);
+                    
+                    // Hacer scroll suave al día actual
+                    daysGrid.scrollTo({
+                        left: Math.max(0, scrollPosition),
+                        behavior: 'smooth'
+                    });
+                }
+            });
+            
+            console.log(`✅ Auto-scroll aplicado a ${currentDayElements.length} grids`);
+        } else {
+            console.log('⚠️ No se encontró ningún día actual para hacer scroll');
         }
     }
 
