@@ -364,6 +364,9 @@ class AmecoApp {
         await this.loadShiftData();
         await this.loadUserSignatureForForms();
         this.updateUI();
+        
+        // Auto-scroll al día actual después de renderizar
+        setTimeout(() => this.scrollToCurrentDay(), 300);
     }
 
     async showSupervisorDashboard() {
@@ -378,6 +381,9 @@ class AmecoApp {
         await this.loadShiftData();
         await this.loadUserSignatureForForms();
         this.updateUI();
+        
+        // Auto-scroll al día actual después de renderizar
+        setTimeout(() => this.scrollToCurrentDay(), 300);
         
         // Cargar órdenes pendientes para firmar
         await this.loadPendingOrders();
@@ -2260,6 +2266,29 @@ class AmecoApp {
         if (day === this.currentDay) return 'current-day';
         if (day < this.currentDay) return 'completed-day';
         return '';
+    }
+
+    scrollToCurrentDay() {
+        // Buscar el primer día actual en el DOM
+        const currentDayElement = document.querySelector('.day-column.current-day');
+        
+        if (currentDayElement) {
+            // Obtener el contenedor de días (days-grid)
+            const daysGrid = currentDayElement.closest('.days-grid');
+            
+            if (daysGrid) {
+                // Calcular la posición para centrar el día actual
+                const dayColumnWidth = currentDayElement.offsetWidth;
+                const gridWidth = daysGrid.offsetWidth;
+                const scrollPosition = currentDayElement.offsetLeft - (gridWidth / 2) + (dayColumnWidth / 2);
+                
+                // Hacer scroll suave al día actual
+                daysGrid.scrollTo({
+                    left: Math.max(0, scrollPosition),
+                    behavior: 'smooth'
+                });
+            }
+        }
     }
 
     getSavedValue(questionId, day, formType) {
