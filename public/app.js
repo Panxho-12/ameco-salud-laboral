@@ -2266,8 +2266,8 @@ class AmecoApp {
     }
 
     scrollToCurrentDay() {
-        // Intentar múltiples veces con diferentes delays para asegurar que funcione
-        const attempts = [100, 300, 500, 800, 1200];
+        // Intentar múltiples veces con delays más largos para móviles
+        const attempts = [200, 500, 1000, 1500, 2000];
         
         attempts.forEach(delay => {
             setTimeout(() => {
@@ -2279,24 +2279,25 @@ class AmecoApp {
                     
                     // Hacer scroll en cada grid
                     currentDayElements.forEach((currentDayElement, index) => {
-                        // Método 1: scrollIntoView (más confiable)
-                        currentDayElement.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'nearest',
-                            inline: 'center'
-                        });
-                        
-                        // Método 2: scroll manual en el contenedor
                         const daysGrid = currentDayElement.closest('.days-grid');
                         if (daysGrid) {
+                            // Calcular posición para centrar el día actual
                             const dayColumnWidth = currentDayElement.offsetWidth;
                             const gridWidth = daysGrid.offsetWidth;
                             const scrollPosition = currentDayElement.offsetLeft - (gridWidth / 2) + (dayColumnWidth / 2);
                             
+                            // Scroll INSTANTÁNEO (sin smooth) para que sea más confiable
                             daysGrid.scrollLeft = Math.max(0, scrollPosition);
+                            
+                            console.log(`✅ Scroll aplicado al grid ${index + 1} - scrollLeft: ${daysGrid.scrollLeft}`);
                         }
                         
-                        console.log(`✅ Scroll aplicado al grid ${index + 1}`);
+                        // También intentar scrollIntoView como backup (instantáneo)
+                        currentDayElement.scrollIntoView({
+                            behavior: 'auto',
+                            block: 'nearest',
+                            inline: 'center'
+                        });
                     });
                 } else {
                     console.log(`⚠️ No se encontraron días actuales (delay: ${delay}ms)`);
