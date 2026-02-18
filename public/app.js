@@ -364,9 +364,6 @@ class AmecoApp {
         await this.loadShiftData();
         await this.loadUserSignatureForForms();
         this.updateUI();
-        
-        // Auto-scroll al día actual después de renderizar (esperar más tiempo)
-        setTimeout(() => this.scrollToCurrentDay(), 800);
     }
 
     async showSupervisorDashboard() {
@@ -381,9 +378,6 @@ class AmecoApp {
         await this.loadShiftData();
         await this.loadUserSignatureForForms();
         this.updateUI();
-        
-        // Auto-scroll al día actual después de renderizar (esperar más tiempo)
-        setTimeout(() => this.scrollToCurrentDay(), 800);
         
         // Cargar órdenes pendientes para firmar
         await this.loadPendingOrders();
@@ -574,6 +568,9 @@ class AmecoApp {
             document.getElementById('completeShiftBtn').style.display = 'inline-block';
             document.getElementById('saveBtn').style.display = 'none';
         }
+        
+        // Auto-scroll al día actual después de renderizar
+        setTimeout(() => this.scrollToCurrentDay(), 500);
     }
 
     switchTab(formType) {
