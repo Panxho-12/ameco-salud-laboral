@@ -109,12 +109,11 @@ app.get('/api/shift/current', authenticateToken, async (req, res) => {
       return res.json({ message: 'User can access both shifts' });
     }
 
-    // Query current active shift
+    // Query most recent shift (active OR completed)
     const { data: shifts, error } = await supabase
       .from('shifts')
       .select('*')
       .eq('user_id', req.user.id)
-      .eq('status', 'active')
       .order('created_at', { ascending: false })
       .limit(1);
 
@@ -122,22 +121,13 @@ app.get('/api/shift/current', authenticateToken, async (req, res) => {
 
     let currentShift = shifts && shifts.length > 0 ? shifts[0] : null;
 
+    // If no shift exists at all, create first one
     if (!currentShift) {
-      // Create new shift with today as start_date
-      const { data: allShifts } = await supabase
-        .from('shifts')
-        .select('shift_number')
-        .eq('user_id', req.user.id)
-        .order('shift_number', { ascending: false })
-        .limit(1);
-
-      const nextShiftNumber = allShifts && allShifts.length > 0 ? allShifts[0].shift_number + 1 : 1;
-
       const { data: newShift, error: insertError } = await supabase
         .from('shifts')
         .insert([{
           user_id: req.user.id,
-          shift_number: nextShiftNumber,
+          shift_number: 1,
           status: 'active',
           start_date: new Date().toISOString().split('T')[0] // YYYY-MM-DD
         }])
@@ -177,15 +167,26 @@ app.get('/api/shift/current', authenticateToken, async (req, res) => {
       currentShift.rest_days_remaining = 20 - daysDiff; // Days until next shift
       // Next shift starts on day 21 (20 days after start_date)
       currentShift.next_shift_start = new Date(startDate.getTime() + (20 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0];
+      
+      // Mark shift as completed if still active
+      if (currentShift.status === 'active') {
+        await supabase
+          .from('shifts')
+          .update({ status: 'completed', completed_at: new Date().toISOString() })
+          .eq('id', currentShift.id);
+        currentShift.status = 'completed';
+      }
     } else if (currentDay > 20) {
       // User completed full cycle (20 days), create new shift
       console.log('Usuario completó ciclo (día > 20), creando nuevo turno...');
       
-      // Complete old shift
-      await supabase
-        .from('shifts')
-        .update({ status: 'completed', completed_at: new Date().toISOString() })
-        .eq('id', currentShift.id);
+      // Complete old shift if still active
+      if (currentShift.status === 'active') {
+        await supabase
+          .from('shifts')
+          .update({ status: 'completed', completed_at: new Date().toISOString() })
+          .eq('id', currentShift.id);
+      }
       
       // Get next shift number
       const { data: allShifts } = await supabase
@@ -222,6 +223,15 @@ app.get('/api/shift/current', authenticateToken, async (req, res) => {
       console.log('Usuario en período de trabajo (día 1-10)');
       currentShift.current_day = Math.min(Math.max(currentDay, 1), 10); // Clamp between 1-10
       currentShift.in_rest = false;
+      
+      // Ensure shift is marked as active
+      if (currentShift.status !== 'active') {
+        await supabase
+          .from('shifts')
+          .update({ status: 'active' })
+          .eq('id', currentShift.id);
+        currentShift.status = 'active';
+      }
     }
 
     res.json(currentShift);
