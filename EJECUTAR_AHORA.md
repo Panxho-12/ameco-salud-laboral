@@ -1,5 +1,10 @@
 # 🚨 FIX URGENTE - Alice Turno A
 
+## ✅ CAMBIOS REALIZADOS
+1. ✅ Commit y push a GitHub completado
+2. ⏳ Render se actualizará automáticamente en 2-3 minutos
+3. ⏳ Ejecutar script SQL en Supabase (ver abajo)
+
 ## PROBLEMA
 Alice (16733796-1) tiene 2 turnos en la base de datos:
 - ❌ shift_id 74: status='active', start_date 2026-02-19 (INCORRECTO)
