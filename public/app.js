@@ -599,6 +599,14 @@ class AmecoApp {
         if (formsContainer) {
             formsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        
+        // Auto-scroll al día actual cuando cambias de pestaña
+        setTimeout(() => {
+            console.log('🎯 Auto-scroll al cambiar a pestaña:', formType);
+            this.scrollToCurrentDay();
+        }, 200);
+    }
+        }
     }
 
     goToNextForm(formType) {
