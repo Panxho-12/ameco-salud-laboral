@@ -3430,3 +3430,654 @@ html {
         will-change: transform;
     }
 }
+
+
+/* ============================================
+   DESKTOP OPTIMIZATION - Vista más compacta para PC
+   ============================================ */
+
+@media (min-width: 1024px) {
+    /* Reducir tamaño base de fuente para desktop */
+    html {
+        font-size: 14px; /* Reducido de 20px a 14px */
+    }
+    
+    body {
+        font-size: 0.95rem;
+    }
+    
+    /* Header más compacto */
+    .app-header {
+        padding: 0.75rem 0;
+    }
+    
+    .header-content {
+        padding: 0 1.5rem;
+    }
+    
+    .ameco-logo-header {
+        max-width: 100px;
+    }
+    
+    .ameco-logo span {
+        font-size: 1.1rem;
+    }
+    
+    .user-info span {
+        font-size: 0.9rem;
+    }
+    
+    .btn-secondary {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.9rem;
+    }
+    
+    /* Main content más compacto */
+    .main-content {
+        padding: 1.5rem 2rem;
+        max-width: 1600px;
+    }
+    
+    /* Shift info más compacto */
+    .shift-info {
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .shift-info h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .shift-details span {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.9rem;
+    }
+    
+    /* Forms container más compacto */
+    .forms-container h3 {
+        font-size: 1.1rem;
+    }
+    
+    .form-tabs {
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .tab-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-content {
+        padding: 1.25rem;
+    }
+    
+    /* Form sections más compactas */
+    .form-section h4 {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Question rows más compactas */
+    .question-row {
+        padding: 1rem 0;
+    }
+    
+    .question-text {
+        font-size: 0.95rem;
+        line-height: 1.4;
+        margin-bottom: 0.4rem;
+    }
+    
+    .question-reference {
+        font-size: 0.85rem;
+        line-height: 1.3;
+    }
+    
+    .question-row > div:first-child {
+        flex: 0 0 280px;
+        margin-right: 1.5rem;
+    }
+    
+    /* Days grid más compacto */
+    .day-column {
+        width: 100px !important;
+        height: 80px !important;
+    }
+    
+    .days-container {
+        width: 1000px; /* 10 días × 100px = 1000px */
+    }
+    
+    .days-grid {
+        width: 500px !important; /* Mostrar exactamente 5 días × 100px = 500px */
+        max-width: 500px !important;
+    }
+    
+    .day-header {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.2rem;
+        height: 30px;
+    }
+    
+    .day-options {
+        height: 50px;
+    }
+    
+    .digital-signature-preview {
+        max-width: 90%;
+        max-height: 40px;
+    }
+    
+    .signature-status-left {
+        font-size: 0.7rem;
+        min-width: 60px;
+    }
+    
+    .btn-create-signature-inline {
+        font-size: 0.5rem;
+        padding: 0.2rem 0.35rem;
+    }
+    
+    /* Radio buttons más compactos */
+    .option-group {
+        gap: 0.4rem;
+        padding: 0.25rem;
+    }
+    
+    .option-group label {
+        font-size: 0.75rem;
+    }
+    
+    .option-group input[type="radio"] {
+        width: 13px;
+        height: 13px;
+        margin-right: 0.2rem;
+        transform: scale(0.85);
+    }
+    
+    .option-group input[type="radio"]:hover {
+        transform: scale(0.95);
+    }
+    
+    .option-group input[type="radio"][value="si"]:checked::after,
+    .option-group input[type="radio"][value="no"]:checked::after {
+        font-size: 8px;
+    }
+    
+    /* Buttons más compactos */
+    .btn-primary, .btn-success {
+        font-size: 0.95rem;
+        padding: 0.7rem 1.2rem;
+    }
+    
+    /* Form actions más compactas */
+    .form-actions {
+        padding: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .form-actions button {
+        margin: 0 0.4rem;
+        font-size: 0.9rem;
+        padding: 0.65rem 1.1rem;
+    }
+    
+    /* Info text más compacto */
+    .info-text {
+        padding: 0.85rem 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .info-text p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        margin-bottom: 0.4rem;
+    }
+    
+    /* Accident section más compacta */
+    .accident-section {
+        padding: 1.25rem;
+        margin: 1.5rem 0;
+    }
+    
+    .accident-section h4 {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Signature sections más compactas */
+    .signature-section {
+        padding: 1.25rem;
+        margin: 1.5rem 0;
+    }
+    
+    .signature-section h5 {
+        font-size: 0.95rem;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Supervisor interface más compacta */
+    .supervisor-header {
+        padding: 1.5rem;
+    }
+    
+    .supervisor-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .supervisor-header p {
+        font-size: 0.9rem;
+    }
+    
+    .supervisor-section-separator {
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .supervisor-section-separator h3 {
+        font-size: 1.15rem;
+    }
+    
+    .supervisor-section-separator p {
+        font-size: 0.85rem;
+    }
+    
+    /* Filters más compactos */
+    .filters-section {
+        padding: 1.25rem;
+        gap: 1.5rem;
+    }
+    
+    .filter-group label {
+        font-size: 0.85rem;
+    }
+    
+    .filter-group select {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+        min-width: 180px;
+    }
+    
+    /* Orders más compactos */
+    .orders-header {
+        padding: 1.25rem;
+    }
+    
+    .orders-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .orders-header span {
+        font-size: 0.85rem;
+    }
+    
+    .order-item {
+        padding: 1.25rem;
+    }
+    
+    .worker-name {
+        font-size: 1rem;
+    }
+    
+    .order-details {
+        font-size: 0.85rem;
+    }
+    
+    .order-status {
+        padding: 0.4rem 0.85rem;
+        font-size: 0.75rem;
+    }
+    
+    .btn-view, .btn-sign {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Modal más compacto */
+    .modal-content {
+        padding: 1.5rem;
+        max-width: 450px;
+    }
+    
+    .modal-content h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.85rem;
+    }
+    
+    .modal-content select {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Order modal más compacto */
+    .order-modal-content {
+        max-width: 900px;
+    }
+    
+    .order-modal-header {
+        padding: 1.25rem;
+    }
+    
+    .order-modal-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .order-modal-body {
+        padding: 1.5rem;
+    }
+    
+    .detail-section {
+        padding: 1.25rem;
+    }
+    
+    .detail-section h4 {
+        font-size: 1rem;
+        margin-bottom: 0.85rem;
+    }
+    
+    .detail-section p {
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .response-item {
+        padding: 0.65rem;
+    }
+    
+    .response-item .question {
+        font-size: 0.9rem;
+    }
+    
+    .response-item .answer {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.65rem;
+    }
+    
+    /* Signature modal más compacto */
+    .signature-modal-content {
+        max-width: 550px;
+    }
+    
+    .signature-modal-header {
+        padding: 1.25rem;
+    }
+    
+    .signature-modal-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .signature-modal-body {
+        padding: 1.5rem;
+    }
+    
+    .signature-canvas-container {
+        padding: 0.75rem;
+    }
+    
+    #signatureCanvas {
+        width: 100%;
+        max-width: 450px;
+        height: 140px;
+    }
+    
+    /* History más compacto */
+    .history-container {
+        padding: 1.25rem;
+    }
+    
+    .history-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .history-header p {
+        font-size: 0.9rem;
+    }
+    
+    .history-table {
+        font-size: 0.85rem;
+    }
+    
+    .history-table th,
+    .history-table td {
+        padding: 0.6rem 0.75rem;
+    }
+    
+    .btn-view-detail,
+    .btn-export-pdf {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.75rem;
+    }
+    
+    /* Audit más compacto */
+    .audit-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .audit-warning {
+        padding: 0.65rem 0.9rem;
+        font-size: 0.9rem;
+    }
+    
+    .stat-card {
+        padding: 1.25rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.85rem;
+    }
+    
+    .audit-table {
+        font-size: 0.85rem;
+    }
+    
+    .audit-table th,
+    .audit-table td {
+        padding: 0.65rem 0.85rem;
+    }
+    
+    .audit-status-badge {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.65rem;
+    }
+    
+    .btn-view-audit {
+        font-size: 0.8rem;
+        padding: 0.45rem 0.9rem;
+    }
+    
+    /* Rest period message más compacto */
+    .rest-period-message {
+        padding: 3rem 1.5rem;
+        max-width: 550px;
+    }
+    
+    .rest-period-message h2 {
+        font-size: 1.6rem;
+        margin-bottom: 0.85rem;
+    }
+    
+    .rest-period-message p {
+        font-size: 1rem;
+        margin: 0.4rem 0;
+    }
+    
+    /* Mandatory notice más compacto */
+    .mandatory-notice {
+        padding: 0.85rem 1rem;
+        margin-bottom: 1.25rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Notifications más compactas */
+    .sse-notification {
+        padding: 0.85rem 1.25rem;
+        max-width: 320px;
+    }
+    
+    .sse-notification-content strong {
+        font-size: 1rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .sse-notification-content p {
+        font-size: 0.85rem;
+    }
+    
+    /* Custom alert más compacto */
+    .custom-alert-content {
+        padding: 1.5rem;
+        max-width: 450px;
+    }
+    
+    .custom-alert-icon {
+        font-size: 3rem;
+        margin-bottom: 0.85rem;
+    }
+    
+    .custom-alert-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.85rem;
+    }
+    
+    .custom-alert-message {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1.25rem;
+    }
+    
+    .custom-alert-btn {
+        padding: 0.65rem 1.75rem;
+        font-size: 0.95rem;
+    }
+    
+    /* Form navigation más compacta */
+    .form-navigation {
+        padding: 1.25rem 0;
+        margin-top: 1.5rem;
+    }
+    
+    .btn-next,
+    .btn-prev {
+        padding: 0.85rem 1.75rem;
+        font-size: 1rem;
+    }
+    
+    /* Inline save button más compacto */
+    .form-actions-inline {
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .btn-save-large {
+        padding: 1rem 2.5rem;
+        font-size: 1.15rem;
+    }
+    
+    .save-hint {
+        font-size: 0.85rem;
+    }
+    
+    /* Derivation options más compactas */
+    .derivation-question {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .derivation-label {
+        font-size: 1rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .derivation-label span {
+        font-size: 0.8rem;
+    }
+    
+    .derivation-options {
+        gap: 1.5rem;
+    }
+    
+    .radio-option {
+        padding: 0.9rem 1.75rem;
+    }
+    
+    .radio-option input[type="radio"] {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .radio-option span {
+        font-size: 1rem;
+    }
+    
+    .derivation-result {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .derivation-result p {
+        font-size: 1.05rem;
+    }
+    
+    /* Supervisor evaluation más compacta */
+    .supervisor-evaluation-section {
+        padding: 1.5rem;
+        margin-top: 1.75rem;
+    }
+    
+    .supervisor-evaluation-section h4 {
+        font-size: 1.1rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .supervisor-question {
+        padding: 1.25rem;
+    }
+    
+    .supervisor-question .question-text {
+        font-size: 1rem;
+    }
+    
+    .supervisor-question .question-reference {
+        font-size: 0.85rem;
+    }
+    
+    /* Login más compacto */
+    .login-container {
+        max-width: 380px;
+        margin: 80px auto;
+        padding: 1.75rem;
+    }
+    
+    .ameco-header .ameco-logo-login {
+        max-width: 260px;
+        margin-bottom: 1.25rem;
+    }
+    
+    .ameco-header h1 {
+        font-size: 1.2rem;
+        margin-bottom: 0.85rem;
+    }
+    
+    .form-group label {
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .form-group input {
+        padding: 0.65rem;
+        font-size: 0.95rem;
+    }
+    
+    .btn-primary {
+        padding: 0.75rem;
+        font-size: 0.95rem;
+    }
+}
