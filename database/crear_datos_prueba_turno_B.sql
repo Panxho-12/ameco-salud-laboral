@@ -159,12 +159,16 @@ AND u.role = 'worker'
 AND df.day_number = 6
 ORDER BY u.name;
 
-RAISE NOTICE '============================================';
-RAISE NOTICE 'DATOS DE PRUEBA CREADOS EXITOSAMENTE';
-RAISE NOTICE '============================================';
-RAISE NOTICE 'Ahora puedes:';
-RAISE NOTICE '1. Iniciar sesión como supervisor del Turno B';
-RAISE NOTICE '2. Probar el botón "Marcar Todos NO requiere derivación"';
-RAISE NOTICE '3. Probar el botón "Firmar Todos los Pendientes"';
-RAISE NOTICE '4. Generar PDFs de los formularios';
-RAISE NOTICE '============================================';
+-- Mensaje final
+DO $$
+BEGIN
+    RAISE NOTICE '============================================';
+    RAISE NOTICE 'DATOS DE PRUEBA CREADOS EXITOSAMENTE';
+    RAISE NOTICE '============================================';
+    RAISE NOTICE 'Ahora puedes:';
+    RAISE NOTICE '1. Iniciar sesión como supervisor del Turno B';
+    RAISE NOTICE '2. Probar el botón "Marcar Todos NO requiere derivación"';
+    RAISE NOTICE '3. Probar el botón "Firmar Todos los Pendientes"';
+    RAISE NOTICE '4. Generar PDFs de los formularios';
+    RAISE NOTICE '============================================';
+END $$;
