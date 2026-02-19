@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const puppeteer = require('puppeteer');
+const htmlPdf = require('html-pdf-node');
 const SSE = require('express-sse');
 const supabase = require('./supabaseClient');
 const { generateFormPDF } = require('./pdfTemplate');
@@ -1609,7 +1609,6 @@ app.get('/api/history/form/:formId', authenticateToken, async (req, res) => {
 
 // Generate PDF for a single form
 app.get('/api/history/form/:formId/pdf', authenticateToken, async (req, res) => {
-  let browser;
   try {
     const { formId } = req.params;
 
@@ -1724,60 +1723,14 @@ app.get('/api/history/form/:formId/pdf', authenticateToken, async (req, res) => 
     console.log('Form ID:', formId);
     console.log('User:', formData.user_name);
     console.log('Day:', formData.day_number);
-    console.log('Signatures:', JSON.stringify({
-      worker: !!formData.signatures?.worker_signature,
-      supervisor: !!formData.signatures?.supervisor_signature,
-      supervisor_name: formData.signatures?.supervisor_name,
-      operations_manager: !!formData.signatures?.operations_manager_signature,
-      operations_manager_name: formData.signatures?.operations_manager_name
-    }, null, 2));
     console.log('=====================');
     
     const html = generateFormPDF(formData);
     
     console.log('HTML generado, longitud:', html.length);
-    
-    // DEBUG: Save HTML to file for inspection
-    const fs = require('fs');
-    const path = require('path');
-    const debugPath = path.join(__dirname, `debug_pdf_${formId}.html`);
-    fs.writeFileSync(debugPath, html, 'utf8');
-    console.log('HTML guardado en:', debugPath);
-    console.log('Puedes abrir este archivo en tu navegador para verificar el contenido');
 
-    // Launch Puppeteer and generate PDF
-    browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--single-process',
-        '--disable-gpu'
-      ],
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath()
-    });
-
-    const page = await browser.newPage();
-    
-    // Add error handling for page content
-    await page.on('pageerror', error => {
-      console.error('Page error:', error);
-    });
-    
-    await page.on('console', msg => {
-      console.log('Browser console:', msg.text());
-    });
-    
-    await page.setContent(html, { waitUntil: 'networkidle0' });
-    
-    // Wait for images to load using setTimeout wrapped in Promise
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    const pdf = await page.pdf({
+    // Generate PDF using html-pdf-node
+    const options = {
       format: 'A4',
       printBackground: true,
       margin: {
@@ -1785,37 +1738,30 @@ app.get('/api/history/form/:formId/pdf', authenticateToken, async (req, res) => 
         right: '20px',
         bottom: '20px',
         left: '20px'
-      },
-      preferCSSPageSize: false,
-      displayHeaderFooter: false
-    });
-    
-    console.log('PDF generado, tamaño:', pdf.length, 'bytes');
+      }
+    };
 
-    await browser.close();
-    browser = null;
+    const file = { content: html };
+    
+    console.log('Generando PDF con html-pdf-node...');
+    const pdfBuffer = await htmlPdf.generatePdf(file, options);
+    
+    console.log('PDF generado, tamaño:', pdfBuffer.length, 'bytes');
 
     // Send PDF with proper headers
     const fileName = `AMECO_Formulario_${formData.user_name.replace(/\s+/g, '_')}_Turno${formData.shift_number}_Dia${formData.day_number}.pdf`;
     
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-    res.setHeader('Content-Length', pdf.length);
+    res.setHeader('Content-Length', pdfBuffer.length);
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
-    res.end(pdf, 'binary');
+    res.send(pdfBuffer);
 
   } catch (error) {
     console.error('Error generating PDF:', error);
     console.error('Error stack:', error.stack);
-    if (browser) {
-      try {
-        await browser.close();
-      } catch (closeError) {
-        console.error('Error closing browser:', closeError);
-      }
-    }
     res.status(500).json({ error: 'Error al generar el PDF', details: error.message });
   }
 });
@@ -1823,27 +1769,6 @@ app.get('/api/history/form/:formId/pdf', authenticateToken, async (req, res) => 
 // ============================================
 // AUDIT ROUTES
 // ============================================
-
-// DEBUG: Serve HTML debug file
-app.get('/api/debug/pdf/:formId', authenticateToken, async (req, res) => {
-  try {
-    const { formId } = req.params;
-    const fs = require('fs');
-    const path = require('path');
-    const debugPath = path.join(__dirname, `debug_pdf_${formId}.html`);
-    
-    if (!fs.existsSync(debugPath)) {
-      return res.status(404).send('Archivo de debug no encontrado');
-    }
-    
-    const html = fs.readFileSync(debugPath, 'utf8');
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.send(html);
-  } catch (error) {
-    console.error('Error serving debug HTML:', error);
-    res.status(500).send('Error al cargar el archivo de debug');
-  }
-});
 
 // ============================================
 // AUDIT ROUTES
