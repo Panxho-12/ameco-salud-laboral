@@ -606,8 +606,6 @@ class AmecoApp {
             this.scrollToCurrentDay();
         }, 200);
     }
-        }
-    }
 
     goToNextForm(formType) {
         this.switchTab(formType);
