@@ -2294,6 +2294,9 @@ class AmecoApp {
     scrollToCurrentDay() {
         console.log('🚀 INICIANDO AUTO-SCROLL - Día actual:', this.currentDay);
         
+        // Guardar las posiciones de scroll para mantenerlas
+        const scrollPositions = new Map();
+        
         // Función para hacer el scroll
         const doScroll = () => {
             const daysGrids = document.querySelectorAll('.days-grid');
@@ -2312,17 +2315,29 @@ class AmecoApp {
                     const gridWidth = grid.offsetWidth;
                     const dayWidth = currentDayElement.offsetWidth;
                     const dayLeft = currentDayElement.offsetLeft;
-                    const scrollPosition = dayLeft - (gridWidth / 2) + (dayWidth / 2);
+                    const scrollPosition = Math.max(0, dayLeft - (gridWidth / 2) + (dayWidth / 2));
                     
                     console.log(`📍 Grid ${index + 1}:`, {
                         gridWidth,
                         dayWidth,
                         dayLeft,
-                        scrollPosition: Math.max(0, scrollPosition)
+                        scrollPosition
                     });
                     
-                    grid.scrollLeft = Math.max(0, scrollPosition);
+                    grid.scrollLeft = scrollPosition;
+                    scrollPositions.set(grid, scrollPosition);
                     scrolledCount++;
+                    
+                    // Mantener el scroll horizontal fijo cuando se hace scroll vertical
+                    grid.addEventListener('scroll', function maintainScroll(e) {
+                        if (scrollPositions.has(this)) {
+                            const savedPosition = scrollPositions.get(this);
+                            if (Math.abs(this.scrollLeft - savedPosition) > 5) {
+                                // Solo restaurar si el cambio es significativo
+                                this.scrollLeft = savedPosition;
+                            }
+                        }
+                    }, { passive: true });
                     
                     console.log(`✅ Grid ${index + 1} scrolleado a ${grid.scrollLeft}px`);
                 } else {
