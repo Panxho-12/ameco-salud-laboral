@@ -667,8 +667,10 @@ app.post('/api/supervisor/sign-all', authenticateToken, async (req, res) => {
       .from('daily_forms')
       .select(`
         *,
-        shifts!inner(user_id),
-        shifts.users!inner(role)
+        shifts!inner(
+          user_id,
+          users!inner(role)
+        )
       `)
       .eq('worker_signed', true)
       .eq('supervisor_signed', false);
