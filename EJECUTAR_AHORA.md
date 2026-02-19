@@ -1,135 +1,58 @@
-# ⚠️ ACCIÓN REQUERIDA - Ejecutar Script SQL
+# 🚨 FIX URGENTE - Alice Turno A
 
-## Problema Actual
+## PROBLEMA
+Alice (16733796-1) tiene 2 turnos en la base de datos:
+- ❌ shift_id 74: status='active', start_date 2026-02-19 (INCORRECTO)
+- ✅ shift_id 72: status='completed', start_date 2026-02-09 (CORRECTO)
 
-Todos los usuarios (Turno A y Turno B) tienen el mismo `start_date = '2026-02-14'`, lo que causa:
+El sistema toma el turno activo (74) en vez del completado (72), por eso Alice ve "Día 1" en vez de "En Descanso".
 
-- ❌ Turno A: Muestra "Día 10" cuando debería estar en descanso
-- ❌ Turno B: Correcto (día 4), pero por casualidad
+## SOLUCIÓN
+Ejecutar el script: `database/eliminar_turno_74_alice.sql`
 
-## Solución
+## PASOS PARA EJECUTAR
 
-Ejecutar el script SQL que separa correctamente los turnos A y B.
+### Opción 1: Desde Supabase Dashboard (RECOMENDADO)
+1. Ir a https://supabase.com/dashboard
+2. Seleccionar el proyecto AMECO
+3. Ir a "SQL Editor" en el menú lateral
+4. Copiar y pegar el contenido de `database/eliminar_turno_74_alice.sql`
+5. Click en "Run" o presionar Ctrl+Enter
+6. Verificar que el resultado muestre solo 1 turno para Alice (shift_id 72)
 
-## Pasos para Ejecutar
-
-### 1. Abrir Supabase SQL Editor
-
-1. Ir a [https://supabase.com](https://supabase.com)
-2. Abrir tu proyecto
-3. Ir a **SQL Editor** (icono de base de datos en el menú lateral)
-4. Click en **New Query**
-
-### 2. Copiar y Pegar el Script
-
-Copiar TODO el contenido del archivo: `database/fix_turnos_A_B.sql`
-
-O copiar directamente desde aquí:
-
-```sql
--- Fix: Configurar correctamente los turnos A y B
--- Fecha: 2026-02-17 (Martes)
-
--- ============================================
--- TURNO B - Actualmente en faena (día 4)
--- ============================================
-UPDATE shifts 
-SET start_date = '2026-02-14'
-WHERE status = 'active'
-AND user_id IN (
-    SELECT id FROM users 
-    WHERE shift = 'B' 
-    AND role IN ('worker', 'supervisor')
-);
-
--- ============================================
--- TURNO A - Actualmente en descanso
--- ============================================
-UPDATE shifts 
-SET start_date = '2026-02-04'
-WHERE status = 'active'
-AND user_id IN (
-    SELECT id FROM users 
-    WHERE shift = 'A' 
-    AND role IN ('worker', 'supervisor')
-);
-
--- ============================================
--- VERIFICACIÓN
--- ============================================
-SELECT 
-    u.shift as turno,
-    u.name as usuario,
-    u.role as rol,
-    s.shift_number as num_turno,
-    s.start_date as fecha_inicio,
-    s.status as estado,
-    CURRENT_DATE as hoy,
-    CURRENT_DATE - s.start_date as dias_transcurridos,
-    (CURRENT_DATE - s.start_date) + 1 as dia_actual,
-    CASE 
-        WHEN (CURRENT_DATE - s.start_date) + 1 BETWEEN 1 AND 10 THEN 'EN FAENA'
-        WHEN (CURRENT_DATE - s.start_date) + 1 > 10 THEN 'EN DESCANSO'
-        ELSE 'FUTURO'
-    END as estado_turno
-FROM shifts s
-JOIN users u ON s.user_id = u.id
-WHERE s.status = 'active'
-AND u.role IN ('worker', 'supervisor')
-ORDER BY u.shift, u.name;
+### Opción 2: Desde terminal con psql
+```bash
+psql "postgresql://[TU_CONNECTION_STRING]" -f database/eliminar_turno_74_alice.sql
 ```
 
-### 3. Ejecutar el Script
+## VERIFICACIÓN
+Después de ejecutar el script:
+1. Iniciar sesión como Alice (16733796-1 / Ameco@2025)
+2. Debería ver el mensaje: "En Descanso - Próximo turno inicia el [fecha]"
+3. NO debería ver "Día 1 de 10"
 
-1. Click en **Run** (o presionar Ctrl+Enter)
-2. Esperar a que termine (debería ser instantáneo)
-3. Revisar los resultados de la verificación
+## RESULTADO ESPERADO
+```
+username      | name                                    | shift_id | start_date | status
+--------------+-----------------------------------------+----------+------------+-----------
+16733796-1    | Pizarro Lopez Alice Estefania Elizabeth | 72       | 2026-02-09 | completed
+```
 
-### 4. Verificar Resultados
+## NOTA TÉCNICA
+El problema ocurre en `server.js` línea 117-120:
+```javascript
+const { data: shifts, error } = await supabase
+  .from('shifts')
+  .select('*')
+  .eq('user_id', req.user.id)
+  .eq('status', 'active')  // ← Solo busca turnos activos
+  .order('created_at', { ascending: false })
+  .limit(1);
+```
 
-Deberías ver en la tabla de resultados:
+Al eliminar el shift_id 74 (activo incorrecto), el sistema no encontrará ningún turno activo para Alice, lo cual es correcto porque está en descanso. La lógica en `server.js` línea 123-145 creará un nuevo turno solo si es necesario, pero primero verificará si está en período de descanso.
 
-**Turno A:**
-- start_date: `2026-02-04`
-- dia_actual: `14`
-- estado_turno: `EN DESCANSO`
-
-**Turno B:**
-- start_date: `2026-02-14`
-- dia_actual: `4`
-- estado_turno: `EN FAENA`
-
-### 5. Recargar la Aplicación
-
-1. En el navegador, recargar la página (F5)
-2. Hacer logout y login nuevamente
-
-## Resultado Esperado
-
-**Después de ejecutar el script:**
-
-### Usuario Turno A
-- ❌ No ve formularios
-- 🏖️ Ve mensaje: "Período de Descanso"
-- 📅 Próximo turno: 24/02/2026
-- ⏰ Días restantes: 7
-
-### Usuario Turno B
-- ✅ Ve "Día 4 de 10"
-- ✅ Solo día 4 habilitado
-- ✅ Puede completar formularios
-
-## Si Algo Sale Mal
-
-Si después de ejecutar el script los usuarios siguen viendo días incorrectos:
-
-1. Verificar que el script se ejecutó sin errores
-2. Revisar la tabla de verificación al final del script
-3. Hacer logout/login en la aplicación
-4. Limpiar caché del navegador (Ctrl+Shift+Delete)
-
-## Contacto
-
-Si necesitas ayuda, revisa:
-- `database/diagnostico_turnos.sql` - Para ver el estado actual
-- `CAMBIOS_TURNOS_A_B.md` - Documentación completa de cambios
+## DESPUÉS DEL FIX
+- Alice verá "En Descanso" ✅
+- Campusano verá "Día 6 de 10" ✅
+- Sistema funcionando correctamente ✅
