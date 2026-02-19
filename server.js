@@ -689,7 +689,7 @@ app.post('/api/supervisor/sign-all', authenticateToken, async (req, res) => {
       .from('daily_forms')
       .update({
         supervisor_signed: true,
-        supervisor_signature: req.user.name,
+        supervisor_signature_id: req.user.id,
         signed_at: new Date().toISOString()
       })
       .in('id', formIds);
