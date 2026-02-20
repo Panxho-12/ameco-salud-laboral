@@ -4043,28 +4043,36 @@ class AmecoApp {
         
         if (!endpoint) return;
         
+        console.log('🔌 Connecting SSE for role:', this.currentUser.role, 'endpoint:', endpoint);
+        
         this.sseConnection = new EventSource(endpoint + '?token=' + localStorage.getItem('token'));
         
         this.sseConnection.onmessage = (event) => {
             try {
+                console.log('📨 SSE message received:', event.data);
                 const data = JSON.parse(event.data);
                 this.handleSSEMessage(data);
             } catch (error) {
-                console.error('Error parsing SSE message:', error);
+                console.error('❌ Error parsing SSE message:', error);
             }
         };
         
         this.sseConnection.onerror = (error) => {
-            console.error('SSE connection error:', error);
+            console.error('❌ SSE connection error:', error);
             // Reconnect after 5 seconds
             setTimeout(() => {
                 if (this.currentUser) {
+                    console.log('🔄 Reconnecting SSE...');
                     this.connectSSE();
                 }
             }, 5000);
         };
         
-        console.log('SSE connected for role:', this.currentUser.role);
+        this.sseConnection.onopen = () => {
+            console.log('✅ SSE connection opened successfully');
+        };
+        
+        console.log('✅ SSE connected for role:', this.currentUser.role);
     }
 
     disconnectSSE() {
@@ -4076,18 +4084,21 @@ class AmecoApp {
     }
 
     handleSSEMessage(data) {
-        console.log('SSE message received:', data);
+        console.log('📬 SSE message received:', data);
         
         if (data.type === 'new_order') {
             // New order available
+            console.log('🆕 New order notification');
             this.showNotification('Nueva Orden', 'Hay una nueva orden pendiente de revisión');
             this.refreshCurrentView();
         } else if (data.type === 'order_signed') {
             // Order was signed
+            console.log('✍️ Order signed notification');
             this.showNotification('Orden Firmada', 'Una orden ha sido firmada');
             this.refreshCurrentView();
         } else if (data.type === 'derivation_required') {
             // Supervisor marked "SÍ requiere derivación"
+            console.log('⚠️ Derivation required notification');
             this.showNotification('⚠️ Derivación Requerida', 'Un supervisor ha marcado un caso que requiere derivación');
             this.refreshCurrentView();
         }
@@ -4139,13 +4150,13 @@ class AmecoApp {
         // Clear any existing interval
         this.stopHistoryAutoRefresh();
         
-        // Refresh every 30 seconds
+        // Refresh every 10 seconds (reduced from 30 for better UX)
         this.historyRefreshInterval = setInterval(() => {
-            console.log('Auto-refreshing history...');
+            console.log('🔄 Auto-refreshing history...');
             this.loadHistoryForms();
-        }, 30000); // 30 seconds
+        }, 10000); // 10 seconds
         
-        console.log('History auto-refresh started (every 30 seconds)');
+        console.log('✅ History auto-refresh started (every 10 seconds)');
     }
 
     stopHistoryAutoRefresh() {
