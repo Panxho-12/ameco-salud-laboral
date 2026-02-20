@@ -1556,8 +1556,10 @@ class AmecoApp {
     startDrawing(e) {
         this.isDrawing = true;
         const rect = this.signatureCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const scaleX = this.signatureCanvas.width / rect.width;
+        const scaleY = this.signatureCanvas.height / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
         
         this.signatureCtx.beginPath();
         this.signatureCtx.moveTo(x, y);
@@ -1567,8 +1569,10 @@ class AmecoApp {
         if (!this.isDrawing) return;
         
         const rect = this.signatureCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const scaleX = this.signatureCanvas.width / rect.width;
+        const scaleY = this.signatureCanvas.height / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
         
         this.signatureCtx.lineTo(x, y);
         this.signatureCtx.stroke();
