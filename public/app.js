@@ -4023,7 +4023,9 @@ class AmecoApp {
         this.disconnectSSE();
         
         let endpoint = null;
-        if (this.currentUser.role === 'supervisor') {
+        if (this.currentUser.role === 'worker') {
+            endpoint = '/api/sse/worker';
+        } else if (this.currentUser.role === 'supervisor') {
             endpoint = '/api/sse/supervisor';
         } else if (this.currentUser.role === 'operations_manager') {
             endpoint = '/api/sse/operations-manager';
@@ -4031,7 +4033,7 @@ class AmecoApp {
             endpoint = '/api/sse/ohsem';
         }
         
-        if (!endpoint) return; // Workers don't need SSE
+        if (!endpoint) return;
         
         this.sseConnection = new EventSource(endpoint + '?token=' + localStorage.getItem('token'));
         
@@ -4106,7 +4108,12 @@ class AmecoApp {
 
     refreshCurrentView() {
         // Refresh the current view based on user role
-        if (this.currentUser.role === 'supervisor') {
+        if (this.currentUser.role === 'worker') {
+            // Reload worker's shift data to update form status
+            if (this.currentShift) {
+                this.loadShiftData(this.currentShift.id);
+            }
+        } else if (this.currentUser.role === 'supervisor') {
             this.loadPendingOrders();
         } else if (this.currentUser.role === 'operations_manager') {
             this.loadOperationsManagerOrders();

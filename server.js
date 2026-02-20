@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'ameco_jwt_secret_local';
 
 // SSE instances for real-time updates
+const workerSSE = new SSE();
 const supervisorSSE = new SSE();
 const operationsManagerSSE = new SSE();
 const ohsemSSE = new SSE();
@@ -1224,6 +1225,14 @@ app.post('/api/ohsem/sign-all', authenticateToken, async (req, res) => {
 // REAL-TIME UPDATES (SSE)
 // ============================================
 
+// SSE endpoint for workers
+app.get('/api/sse/worker', authenticateToken, (req, res) => {
+  if (req.user.role !== 'worker') {
+    return res.status(403).json({ error: 'Acceso denegado' });
+  }
+  workerSSE.init(req, res);
+});
+
 // SSE endpoint for supervisors
 app.get('/api/sse/supervisor', authenticateToken, (req, res) => {
   if (req.user.role !== 'supervisor') {
@@ -1266,7 +1275,8 @@ function notifyOrderSigned(formType) {
   const message = { type: 'order_signed', formType, timestamp: new Date().toISOString() };
   
   if (formType === 'worker') {
-    // Notify OHSEM when supervisor signs a worker form
+    // Notify workers and OHSEM when supervisor signs a worker form
+    workerSSE.send(message);
     ohsemSSE.send(message);
   } else if (formType === 'supervisor') {
     // Notify OHSEM when operations manager signs a supervisor form
