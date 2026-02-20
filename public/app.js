@@ -3715,10 +3715,18 @@ class AmecoApp {
         
         // Load forms
         this.loadHistoryForms();
+        
+        // Start auto-refresh for workers (every 30 seconds)
+        if (this.currentUser.role === 'worker') {
+            this.startHistoryAutoRefresh();
+        }
     }
 
     hideHistoryInterface() {
         document.getElementById('historyInterface').style.display = 'none';
+        
+        // Stop auto-refresh
+        this.stopHistoryAutoRefresh();
         
         // Show appropriate interface based on role
         if (this.currentUser.role === 'operations_manager') {
@@ -4113,12 +4121,38 @@ class AmecoApp {
             if (this.currentShift) {
                 this.loadShiftData(this.currentShift.id);
             }
+            // Also refresh history if it's visible
+            const historyInterface = document.getElementById('historyInterface');
+            if (historyInterface && historyInterface.style.display !== 'none') {
+                this.loadHistoryForms();
+            }
         } else if (this.currentUser.role === 'supervisor') {
             this.loadPendingOrders();
         } else if (this.currentUser.role === 'operations_manager') {
             this.loadOperationsManagerOrders();
         } else if (this.currentUser.role === 'ohsem') {
             this.loadOhsemOrders();
+        }
+    }
+
+    startHistoryAutoRefresh() {
+        // Clear any existing interval
+        this.stopHistoryAutoRefresh();
+        
+        // Refresh every 30 seconds
+        this.historyRefreshInterval = setInterval(() => {
+            console.log('Auto-refreshing history...');
+            this.loadHistoryForms();
+        }, 30000); // 30 seconds
+        
+        console.log('History auto-refresh started (every 30 seconds)');
+    }
+
+    stopHistoryAutoRefresh() {
+        if (this.historyRefreshInterval) {
+            clearInterval(this.historyRefreshInterval);
+            this.historyRefreshInterval = null;
+            console.log('History auto-refresh stopped');
         }
     }
 
