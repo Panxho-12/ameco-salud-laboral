@@ -685,7 +685,6 @@ app.post('/api/supervisor/sign-all', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'No hay órdenes pendientes para firmar' });
     }
 
-    // Sign all pending forms
     const formIds = workerForms.map(f => f.id);
     const { error: updateError } = await supabase
       .from('daily_forms')
@@ -697,6 +696,9 @@ app.post('/api/supervisor/sign-all', authenticateToken, async (req, res) => {
       .in('id', formIds);
 
     if (updateError) throw updateError;
+
+    // Notify OHSEM and Operations Manager in real-time
+    notifyOrderSigned('worker');
 
     res.json({ 
       message: `${formIds.length} órdenes firmadas exitosamente`,

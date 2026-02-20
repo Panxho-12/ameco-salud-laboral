@@ -3062,6 +3062,7 @@ class AmecoApp {
             if (response.ok) {
                 const result = await response.json();
                 this.showCustomAlert('success', 'Firmas Completadas', result.message);
+                // Recargar la lista de órdenes pendientes
                 await this.loadPendingOrders();
             } else {
                 const error = await response.json();
