@@ -1372,35 +1372,35 @@ function checkForHealthIssues(formData) {
   
   // Mapeo de preguntas para mostrar texto legible
   const conditionsQuestions = {
-    day2: "¿Padece de alguna enfermedad o molestia física?",
-    day3: "¿Presenta factores externos que le impidan estar concentrado?",
-    day4: "¿Ha sufrido algún accidente con lesión?"
+    q12: "¿Padece de alguna enfermedad o molestia física?",
+    q13: "¿Presenta factores externos que le impidan estar concentrado?",
+    q14: "¿Ha sufrido algún accidente con lesión?"
   };
   
   const fatigueQuestions = {
-    day1: "¿Ha tenido dificultades en lograr un descanso reparador?",
-    day2: "¿Presenta algún síntoma que dificulte su buen dormir?",
-    day3: "¿Sufre de insomnio últimamente?",
-    day4: "¿Durmió menos tiempo del necesario durante su último período de sueño?",
-    day5: "¿Está consumiendo algún medicamento que provoque somnolencia?",
-    day6: "¿Padece alguna enfermedad que produzca cansancio o somnolencia?",
-    day7: "¿Existen factores externos que afecten la calidad de su sueño?",
-    day8: "¿Ha presentado eventos importantes de somnolencia?"
+    f1: "¿Ha tenido dificultades en lograr un descanso reparador?",
+    f2: "¿Presenta algún síntoma que dificulte su buen dormir?",
+    f3: "¿Sufre de insomnio últimamente?",
+    f4: "¿Durmió menos tiempo del necesario durante su último período de sueño?",
+    f5: "¿Está consumiendo algún medicamento que provoque somnolencia?",
+    f6: "¿Padece alguna enfermedad que produzca cansancio o somnolencia?",
+    f7: "¿Existen factores externos que afecten la calidad de su sueño?",
+    f8: "¿Ha presentado eventos importantes de somnolencia?"
   };
   
-  // Check conditions (skip day1 which is the mandatory first question)
-  for (let i = 2; i <= 4; i++) {
-    const dayKey = `day${i}`;
-    if (formData.conditions && formData.conditions[dayKey] === 'si') {
-      details.push(conditionsQuestions[dayKey] || `Condición ${i}`);
+  // Check conditions (skip q1 which is the mandatory first question)
+  // q12, q13, q14 are the health condition questions
+  ['q12', 'q13', 'q14'].forEach(key => {
+    if (formData.conditions && formData.conditions[key] === 'si') {
+      details.push(conditionsQuestions[key] || `Condición ${key}`);
     }
-  }
+  });
   
-  // Check fatigue questions
+  // Check fatigue questions (f1 to f8)
   for (let i = 1; i <= 8; i++) {
-    const dayKey = `day${i}`;
-    if (formData.fatigue && formData.fatigue[dayKey] === 'si') {
-      details.push(fatigueQuestions[dayKey] || `Fatiga ${i}`);
+    const key = `f${i}`;
+    if (formData.fatigue && formData.fatigue[key] === 'si') {
+      details.push(fatigueQuestions[key] || `Fatiga ${key}`);
     }
   }
   
