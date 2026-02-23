@@ -2557,7 +2557,6 @@ class AmecoApp {
 
         try {
             const response = await fetch(`/api/shift/${this.currentShift.id}/complete`, {
-            const response = await fetch(`/api/shift/${this.currentShift.id}/complete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
