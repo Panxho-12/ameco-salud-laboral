@@ -3209,6 +3209,12 @@ class AmecoApp {
         const currentStatus = order?.supervisor_requires_derivation || 'pending';
         const currentNote = order?.supervisor_derivation_note || '';
 
+        console.log('🔍 DEBUG openDerivationModal:');
+        console.log('- Order:', order);
+        console.log('- form_data exists:', !!order?.form_data);
+        console.log('- form_data type:', typeof order?.form_data);
+        console.log('- form_data:', order?.form_data);
+
         // Verificar si el trabajador marcó "SÍ" en alguna pregunta de salud
         let hasHealthIssues = false;
         let healthIssuesDetails = [];
@@ -3216,12 +3222,16 @@ class AmecoApp {
         if (order?.form_data) {
             try {
                 const formData = typeof order.form_data === 'string' ? JSON.parse(order.form_data) : order.form_data;
+                console.log('- Parsed formData:', formData);
                 const healthIssuesResult = this.checkForHealthIssues(formData);
+                console.log('- Health issues result:', healthIssuesResult);
                 hasHealthIssues = healthIssuesResult.hasIssues;
                 healthIssuesDetails = healthIssuesResult.details;
             } catch (e) {
                 console.error('Error parsing form_data:', e);
             }
+        } else {
+            console.warn('⚠️ No form_data available in order');
         }
 
         const modal = document.createElement('div');
