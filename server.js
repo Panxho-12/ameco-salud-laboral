@@ -450,8 +450,16 @@ app.post('/api/shift/:shiftId/day/:dayNumber', authenticateToken, async (req, re
 
       if (updateError) throw updateError;
       
+      // Check for health issues (any "si" except first mandatory question)
+      const hasHealthIssues = checkForHealthIssues(formData);
+      
       // Notify supervisors in real-time
       notifyNewOrder('worker');
+      
+      // If health issues detected, send special alert
+      if (hasHealthIssues) {
+        notifyHealthAlert(shiftId, dayNumber, req.user.name);
+      }
       
       res.json(updatedForm);
     } else {
@@ -469,8 +477,16 @@ app.post('/api/shift/:shiftId/day/:dayNumber', authenticateToken, async (req, re
 
       if (insertError) throw insertError;
       
+      // Check for health issues (any "si" except first mandatory question)
+      const hasHealthIssues = checkForHealthIssues(formData);
+      
       // Notify supervisors in real-time
       notifyNewOrder('worker');
+      
+      // If health issues detected, send special alert
+      if (hasHealthIssues) {
+        notifyHealthAlert(shiftId, dayNumber, req.user.name);
+      }
       
       res.json(newForm);
     }
@@ -1292,6 +1308,47 @@ function notifyDerivationRequired(shiftId, dayNumber) {
     timestamp: new Date().toISOString() 
   };
   
+  console.log('Notifying OHSEM about derivation required:', message);
+  ohsemSSE.send(message);
+}
+
+// Helper function to check if form has health issues
+function checkForHealthIssues(formData) {
+  // Check conditions (skip day1 which is the mandatory first question)
+  for (let i = 2; i <= 10; i++) {
+    const dayKey = `day${i}`;
+    if (formData.conditions && formData.conditions[dayKey] === 'si') {
+      return true;
+    }
+  }
+  
+  // Check fatigue questions (all of them)
+  for (let i = 1; i <= 10; i++) {
+    const dayKey = `day${i}`;
+    if (formData.fatigue && formData.fatigue[dayKey] === 'si') {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+// Helper function to notify health alert
+function notifyHealthAlert(shiftId, dayNumber, workerName) {
+  const message = { 
+    type: 'health_alert', 
+    shiftId, 
+    dayNumber,
+    workerName,
+    timestamp: new Date().toISOString() 
+  };
+  
+  console.log('🚨 ALERTA DE SALUD: Trabajador marcó SÍ en preguntas de salud:', message);
+  
+  // Notify supervisors and OHSEM
+  supervisorSSE.send(message);
+  ohsemSSE.send(message);
+}
   console.log('Notifying OHSEM about derivation required:', message);
   
   // Notify OHSEM (prevencionistas) when supervisor marks "SÍ requiere derivación"

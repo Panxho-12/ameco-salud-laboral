@@ -2498,6 +2498,13 @@ class AmecoApp {
             });
 
             if (response.ok) {
+                // Check if there are any "si" answers (excluding the first mandatory question)
+                const hasHealthIssues = this.checkForHealthIssues(formData);
+                
+                if (hasHealthIssues) {
+                    this.showCustomAlert('warning', '⚠️ ALERTA DE SALUD', 'Has marcado "SÍ" en una o más preguntas de salud.\n\nSe ha notificado automáticamente a tu Supervisor y al equipo de Prevención de Riesgos para que revisen tu caso.');
+                }
+                
                 this.showCustomAlert('success', 'GUARDADO EXITOSO', `Datos del Día ${dayToSave} guardados correctamente.\n\nAmbos formularios han sido completados y guardados.`);
                 await this.loadShiftData();
                 this.updateUI();
@@ -2547,6 +2554,36 @@ class AmecoApp {
             alert('Debe seleccionar un supervisor');
             return;
         }
+
+    checkForHealthIssues(formData) {
+        // Check conditions (skip day1 which is the mandatory first question)
+        const conditionsWithIssues = [];
+        for (let i = 2; i <= 10; i++) {
+            const dayKey = `day${i}`;
+            if (formData.conditions[dayKey] === 'si') {
+                conditionsWithIssues.push(dayKey);
+            }
+        }
+        
+        // Check fatigue questions
+        const fatigueWithIssues = [];
+        for (let i = 1; i <= 10; i++) {
+            const dayKey = `day${i}`;
+            if (formData.fatigue[dayKey] === 'si') {
+                fatigueWithIssues.push(dayKey);
+            }
+        }
+        
+        const hasIssues = conditionsWithIssues.length > 0 || fatigueWithIssues.length > 0;
+        
+        if (hasIssues) {
+            console.log('⚠️ ALERTA: Trabajador marcó SÍ en preguntas de salud');
+            console.log('Condiciones con SÍ:', conditionsWithIssues);
+            console.log('Fatiga con SÍ:', fatigueWithIssues);
+        }
+        
+        return hasIssues;
+    }
 
         try {
             const response = await fetch(`/api/shift/${this.currentShift.id}/complete`, {
@@ -4099,6 +4136,11 @@ class AmecoApp {
             // Order was signed
             console.log('✍️ Order signed notification');
             this.showNotification('Orden Firmada', 'Una orden ha sido firmada');
+            this.refreshCurrentView();
+        } else if (data.type === 'health_alert') {
+            // Worker marked "SÍ" in health questions
+            console.log('🚨 Health alert notification');
+            this.showNotification('🚨 ALERTA DE SALUD', `${data.workerName} ha marcado SÍ en preguntas de salud. Revisar urgente.`);
             this.refreshCurrentView();
         } else if (data.type === 'derivation_required') {
             // Supervisor marked "SÍ requiere derivación"
