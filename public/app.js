@@ -3781,7 +3781,7 @@ class AmecoApp {
         icon.textContent = icons[type] || icons.info;
         icon.className = `custom-alert-icon ${type}`;
         titleEl.textContent = title;
-        messageEl.textContent = message;
+        messageEl.innerHTML = message; // Changed from textContent to innerHTML to support HTML content
 
         modal.classList.add('show');
     }
