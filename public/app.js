@@ -2581,6 +2581,10 @@ class AmecoApp {
     }
 
     checkForHealthIssues(formData) {
+        console.log('🔍 checkForHealthIssues called with:', formData);
+        console.log('- formData.conditions:', formData.conditions);
+        console.log('- formData.fatigue:', formData.fatigue);
+        
         const details = [];
         
         // Mapeo de preguntas para mostrar texto legible
@@ -2604,20 +2608,26 @@ class AmecoApp {
         // Check conditions (skip day1 which is the mandatory first question)
         for (let i = 2; i <= 4; i++) {
             const dayKey = `day${i}`;
+            console.log(`- Checking conditions.${dayKey}:`, formData.conditions?.[dayKey]);
             if (formData.conditions && formData.conditions[dayKey] === 'si') {
                 details.push(conditionsQuestions[dayKey] || `Condición ${i}`);
+                console.log(`  ✓ Found issue in conditions.${dayKey}`);
             }
         }
         
         // Check fatigue questions
         for (let i = 1; i <= 8; i++) {
             const dayKey = `day${i}`;
+            console.log(`- Checking fatigue.${dayKey}:`, formData.fatigue?.[dayKey]);
             if (formData.fatigue && formData.fatigue[dayKey] === 'si') {
                 details.push(fatigueQuestions[dayKey] || `Fatiga ${i}`);
+                console.log(`  ✓ Found issue in fatigue.${dayKey}`);
             }
         }
         
         const hasIssues = details.length > 0;
+        
+        console.log('📊 Final result:', { hasIssues, detailsCount: details.length, details });
         
         if (hasIssues) {
             console.log('⚠️ ALERTA: Trabajador marcó SÍ en preguntas de salud');
