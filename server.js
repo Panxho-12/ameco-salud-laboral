@@ -758,9 +758,18 @@ app.post('/api/supervisor/mark-all-derivation-no', authenticateToken, async (req
       return res.status(404).json({ error: 'No hay formularios pendientes' });
     }
 
+    // Filtrar solo formularios que están en "pending" o "no" (excluir los que ya tienen "si")
+    const formsToUpdate = workerForms.filter(form => 
+      form.supervisor_requires_derivation !== 'si'
+    );
+
+    if (formsToUpdate.length === 0) {
+      return res.status(404).json({ error: 'No hay formularios pendientes para marcar. Los formularios con derivación "SÍ" no se pueden modificar.' });
+    }
+
     // Verificar si algún formulario tiene problemas de salud Y aún NO ha sido derivado
     const formsWithHealthIssues = [];
-    for (const form of workerForms) {
+    for (const form of formsToUpdate) {
       // Solo verificar si está en estado "pending" (no ha sido derivado)
       if (form.supervisor_requires_derivation === 'pending' || !form.supervisor_requires_derivation) {
         if (form.form_data) {
@@ -788,8 +797,8 @@ app.post('/api/supervisor/mark-all-derivation-no', authenticateToken, async (req
       });
     }
 
-    // Mark all as "NO requiere derivación" solo si no hay problemas pendientes
-    const formIds = workerForms.map(f => f.id);
+    // Mark only filtered forms as "NO requiere derivación"
+    const formIds = formsToUpdate.map(f => f.id);
     const { error: updateError } = await supabase
       .from('daily_forms')
       .update({
@@ -800,9 +809,16 @@ app.post('/api/supervisor/mark-all-derivation-no', authenticateToken, async (req
 
     if (updateError) throw updateError;
 
+    const skippedCount = workerForms.length - formsToUpdate.length;
+    let message = `${formIds.length} formularios marcados como "NO requiere derivación"`;
+    if (skippedCount > 0) {
+      message += `. ${skippedCount} formulario(s) con derivación "SÍ" no fueron modificados.`;
+    }
+
     res.json({ 
-      message: `${formIds.length} formularios marcados como "NO requiere derivación"`,
-      updatedCount: formIds.length
+      message,
+      updatedCount: formIds.length,
+      skippedCount
     });
   } catch (error) {
     console.error('Error marking all derivation no:', error);
