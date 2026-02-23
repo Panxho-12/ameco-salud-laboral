@@ -1349,11 +1349,6 @@ function notifyHealthAlert(shiftId, dayNumber, workerName) {
   supervisorSSE.send(message);
   ohsemSSE.send(message);
 }
-  console.log('Notifying OHSEM about derivation required:', message);
-  
-  // Notify OHSEM (prevencionistas) when supervisor marks "SÍ requiere derivación"
-  ohsemSSE.send(message);
-}
 
 // ============================================
 // DIGITAL SIGNATURE ROUTES
