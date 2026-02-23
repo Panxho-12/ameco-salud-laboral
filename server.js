@@ -758,34 +758,37 @@ app.post('/api/supervisor/mark-all-derivation-no', authenticateToken, async (req
       return res.status(404).json({ error: 'No hay formularios pendientes' });
     }
 
-    // Verificar si algún formulario tiene problemas de salud
+    // Verificar si algún formulario tiene problemas de salud Y aún NO ha sido derivado
     const formsWithHealthIssues = [];
     for (const form of workerForms) {
-      if (form.form_data) {
-        const formData = typeof form.form_data === 'string' 
-          ? JSON.parse(form.form_data) 
-          : form.form_data;
-        
-        const healthIssuesResult = checkForHealthIssues(formData);
-        if (healthIssuesResult.hasIssues) {
-          formsWithHealthIssues.push({
-            worker_name: form.shifts?.users?.name || 'Desconocido',
-            day_number: form.day_number,
-            issues: healthIssuesResult.details
-          });
+      // Solo verificar si está en estado "pending" (no ha sido derivado)
+      if (form.supervisor_requires_derivation === 'pending' || !form.supervisor_requires_derivation) {
+        if (form.form_data) {
+          const formData = typeof form.form_data === 'string' 
+            ? JSON.parse(form.form_data) 
+            : form.form_data;
+          
+          const healthIssuesResult = checkForHealthIssues(formData);
+          if (healthIssuesResult.hasIssues) {
+            formsWithHealthIssues.push({
+              worker_name: form.shifts?.users?.name || 'Desconocido',
+              day_number: form.day_number,
+              issues: healthIssuesResult.details
+            });
+          }
         }
       }
     }
 
-    // Si hay formularios con problemas de salud, rechazar la operación
+    // Si hay formularios con problemas de salud que AÚN NO han sido derivados, rechazar
     if (formsWithHealthIssues.length > 0) {
       return res.status(400).json({ 
-        error: `No se puede marcar todos como "NO" porque ${formsWithHealthIssues.length} formulario(s) tienen problemas de salud marcados`,
+        error: `No se puede marcar todos como "NO" porque ${formsWithHealthIssues.length} formulario(s) tienen problemas de salud que aún no han sido derivados`,
         formsWithIssues: formsWithHealthIssues
       });
     }
 
-    // Mark all as "NO requiere derivación" solo si no hay problemas de salud
+    // Mark all as "NO requiere derivación" solo si no hay problemas pendientes
     const formIds = workerForms.map(f => f.id);
     const { error: updateError } = await supabase
       .from('daily_forms')
@@ -825,22 +828,24 @@ app.post('/api/supervisor/set-derivation/:shiftId/:dayNumber', authenticateToken
     // Obtener el formulario para verificar si hay problemas de salud
     const { data: existingForm, error: fetchError } = await supabase
       .from('daily_forms')
-      .select('form_data')
+      .select('form_data, supervisor_requires_derivation')
       .eq('shift_id', shiftId)
       .eq('day_number', dayNumber)
       .single();
 
     if (fetchError) throw fetchError;
 
-    // Verificar si el trabajador marcó "SÍ" en alguna pregunta de salud
-    if (existingForm?.form_data) {
+    // Solo validar si el formulario está en estado "pending" (primera vez que se marca)
+    const currentStatus = existingForm?.supervisor_requires_derivation || 'pending';
+    
+    if (currentStatus === 'pending' && existingForm?.form_data) {
       const formData = typeof existingForm.form_data === 'string' 
         ? JSON.parse(existingForm.form_data) 
         : existingForm.form_data;
       
       const healthIssuesResult = checkForHealthIssues(formData);
       
-      // Si hay problemas de salud y el supervisor intenta marcar "NO", rechazar
+      // Si hay problemas de salud y el supervisor intenta marcar "NO" por primera vez, rechazar
       if (healthIssuesResult.hasIssues && requires_derivation === 'no') {
         return res.status(400).json({ 
           error: 'No puede marcar "NO requiere derivación" porque el trabajador marcó "SÍ" en preguntas de salud',
@@ -848,6 +853,7 @@ app.post('/api/supervisor/set-derivation/:shiftId/:dayNumber', authenticateToken
         });
       }
     }
+    // Si ya fue derivado antes (status = 'si' o 'no'), permitir cambiar sin validación adicional
 
     // Update the form
     const { data: updatedForm, error: updateError } = await supabase

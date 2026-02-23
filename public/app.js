@@ -3224,6 +3224,7 @@ class AmecoApp {
         console.log('- form_data exists:', !!order?.form_data);
         console.log('- form_data type:', typeof order?.form_data);
         console.log('- form_data:', order?.form_data);
+        console.log('- currentStatus:', currentStatus);
 
         // Verificar si el trabajador marcó "SÍ" en alguna pregunta de salud
         let hasHealthIssues = false;
@@ -3247,12 +3248,14 @@ class AmecoApp {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
         
-        // Si hay problemas de salud, mostrar alerta y bloquear opción "NO"
+        // Solo bloquear "NO" si tiene problemas de salud Y está en estado "pending"
+        // Si ya fue derivado (status = 'si'), permitir cambiar
         let healthAlertHtml = '';
         let noOptionDisabled = '';
         let noOptionStyle = 'cursor: pointer; background: #f8f9fa;';
         
-        if (hasHealthIssues) {
+        if (hasHealthIssues && currentStatus === 'pending') {
+            // Tiene problemas Y aún no ha sido derivado → BLOQUEAR
             noOptionDisabled = 'disabled';
             noOptionStyle = 'cursor: not-allowed; background: #e9ecef; opacity: 0.6;';
             healthAlertHtml = `
@@ -3269,6 +3272,25 @@ class AmecoApp {
                     </ul>
                     <p style="color: #856404; margin-top: 10px; font-weight: bold; font-size: 0.95rem;">
                         ⚠️ Debe marcar "SÍ requiere derivación" obligatoriamente.
+                    </p>
+                </div>
+            `;
+        } else if (hasHealthIssues && currentStatus === 'si') {
+            // Tiene problemas PERO ya fue derivado → MOSTRAR INFO pero PERMITIR cambiar
+            healthAlertHtml = `
+                <div style="background: #d1ecf1; border: 2px solid #0c5460; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <span style="font-size: 1.5rem; margin-right: 10px;">ℹ️</span>
+                        <strong style="color: #0c5460; font-size: 1.1rem;">Información: Problemas de Salud Detectados</strong>
+                    </div>
+                    <p style="color: #0c5460; margin-bottom: 10px; font-size: 0.95rem;">
+                        El trabajador marcó "SÍ" en las siguientes preguntas:
+                    </p>
+                    <ul style="color: #0c5460; margin: 0; padding-left: 20px; font-size: 0.9rem;">
+                        ${healthIssuesDetails.map(detail => `<li>${detail}</li>`).join('')}
+                    </ul>
+                    <p style="color: #0c5460; margin-top: 10px; font-size: 0.9rem;">
+                        ✓ Ya fue marcado como "SÍ requiere derivación". Puede modificar si es necesario.
                     </p>
                 </div>
             `;
