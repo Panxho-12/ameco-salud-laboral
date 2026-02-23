@@ -3162,24 +3162,37 @@ class AmecoApp {
                 
                 // Si hay formularios con problemas de salud, mostrar detalles
                 if (error.formsWithIssues && error.formsWithIssues.length > 0) {
-                    let detailsHtml = '<div style="text-align: left; max-height: 300px; overflow-y: auto;">';
-                    detailsHtml += '<p style="margin-bottom: 10px; font-weight: bold;">Los siguientes formularios tienen problemas de salud:</p>';
-                    detailsHtml += '<ul style="margin: 0; padding-left: 20px;">';
+                    let detailsHtml = '<div style="text-align: left; max-height: 400px; overflow-y: auto;">';
+                    detailsHtml += '<p style="margin-bottom: 15px; font-size: 1.05rem; color: #721c24; background: #f8d7da; padding: 12px; border-radius: 5px; border-left: 4px solid #dc3545;">';
+                    detailsHtml += '<strong>⚠️ NO SE PUEDE MARCAR TODOS COMO "NO"</strong><br>';
+                    detailsHtml += `Se detectaron <strong>${error.formsWithIssues.length} operador(es)</strong> con problemas de salud que requieren derivación obligatoria.`;
+                    detailsHtml += '</p>';
                     
-                    error.formsWithIssues.forEach(form => {
-                        detailsHtml += `<li style="margin-bottom: 10px;">
-                            <strong>${form.worker_name}</strong> - Día ${form.day_number}
-                            <ul style="margin-top: 5px; font-size: 0.9em; color: #666;">
-                                ${form.issues.map(issue => `<li>${issue}</li>`).join('')}
-                            </ul>
+                    detailsHtml += '<p style="margin-bottom: 10px; font-weight: bold; font-size: 1rem; color: #333;">Operadores con problemas detectados:</p>';
+                    detailsHtml += '<ul style="margin: 0; padding-left: 20px; list-style: none;">';
+                    
+                    error.formsWithIssues.forEach((form, index) => {
+                        detailsHtml += `<li style="margin-bottom: 15px; padding: 12px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                            <div style="font-size: 1rem; margin-bottom: 8px;">
+                                <strong style="color: #856404;">🔸 ${form.worker_name}</strong> - Día ${form.day_number} de 10
+                            </div>
+                            <div style="font-size: 0.9rem; color: #856404; margin-left: 15px;">
+                                <strong>Problemas detectados:</strong>
+                                <ul style="margin-top: 5px; padding-left: 15px;">
+                                    ${form.issues.map(issue => `<li style="margin-bottom: 3px;">${issue}</li>`).join('')}
+                                </ul>
+                            </div>
                         </li>`;
                     });
                     
                     detailsHtml += '</ul>';
-                    detailsHtml += '<p style="margin-top: 15px; color: #dc3545; font-weight: bold;">⚠️ Debe revisar estos formularios individualmente y marcar "SÍ requiere derivación".</p>';
+                    detailsHtml += '<div style="margin-top: 20px; padding: 15px; background: #d1ecf1; border-left: 4px solid #0c5460; border-radius: 5px;">';
+                    detailsHtml += '<p style="margin: 0; color: #0c5460; font-weight: bold; font-size: 0.95rem;">📋 Acción Requerida:</p>';
+                    detailsHtml += '<p style="margin: 5px 0 0 0; color: #0c5460; font-size: 0.9rem;">Debe revisar cada formulario individualmente y marcar "SÍ requiere derivación" para estos operadores.</p>';
+                    detailsHtml += '</div>';
                     detailsHtml += '</div>';
                     
-                    this.showCustomAlert('error', 'No se puede marcar todos como NO', detailsHtml);
+                    this.showCustomAlert('error', '⚠️ Operadores Requieren Derivación', detailsHtml);
                 } else {
                     this.showCustomAlert('error', 'Error', `Error: ${error.error}`);
                 }
