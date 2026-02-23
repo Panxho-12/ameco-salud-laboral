@@ -2555,6 +2555,32 @@ class AmecoApp {
             return;
         }
 
+        try {
+            const response = await fetch(`/api/shift/${this.currentShift.id}/complete`, {
+            const response = await fetch(`/api/shift/${this.currentShift.id}/complete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ supervisorSignature })
+            });
+
+            if (response.ok) {
+                alert('Turno completado exitosamente');
+                this.hideCompleteShiftModal();
+                await this.loadCurrentShift();
+                await this.loadShiftData();
+                this.updateUI();
+            } else {
+                alert('Error al completar el turno');
+            }
+        } catch (error) {
+            console.error('Error completing shift:', error);
+            alert('Error de conexión');
+        }
+    }
+
     checkForHealthIssues(formData) {
         // Check conditions (skip day1 which is the mandatory first question)
         const conditionsWithIssues = [];
@@ -2583,31 +2609,6 @@ class AmecoApp {
         }
         
         return hasIssues;
-    }
-
-        try {
-            const response = await fetch(`/api/shift/${this.currentShift.id}/complete`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({ supervisorSignature })
-            });
-
-            if (response.ok) {
-                alert('Turno completado exitosamente');
-                this.hideCompleteShiftModal();
-                await this.loadCurrentShift();
-                await this.loadShiftData();
-                this.updateUI();
-            } else {
-                alert('Error al completar el turno');
-            }
-        } catch (error) {
-            console.error('Error completing shift:', error);
-            alert('Error de conexión');
-        }
     }
 
     // Función para simular el paso al siguiente día (solo para testing)
