@@ -2581,33 +2581,53 @@ class AmecoApp {
     }
 
     checkForHealthIssues(formData) {
+        const details = [];
+        
+        // Mapeo de preguntas para mostrar texto legible
+        const conditionsQuestions = {
+            day2: "¿Padece de alguna enfermedad o molestia física?",
+            day3: "¿Presenta factores externos que le impidan estar concentrado?",
+            day4: "¿Ha sufrido algún accidente con lesión?"
+        };
+        
+        const fatigueQuestions = {
+            day1: "¿Ha tenido dificultades en lograr un descanso reparador?",
+            day2: "¿Presenta algún síntoma que dificulte su buen dormir?",
+            day3: "¿Sufre de insomnio últimamente?",
+            day4: "¿Durmió menos tiempo del necesario durante su último período de sueño?",
+            day5: "¿Está consumiendo algún medicamento que provoque somnolencia?",
+            day6: "¿Padece alguna enfermedad que produzca cansancio o somnolencia?",
+            day7: "¿Existen factores externos que afecten la calidad de su sueño?",
+            day8: "¿Ha presentado eventos importantes de somnolencia?"
+        };
+        
         // Check conditions (skip day1 which is the mandatory first question)
-        const conditionsWithIssues = [];
-        for (let i = 2; i <= 10; i++) {
+        for (let i = 2; i <= 4; i++) {
             const dayKey = `day${i}`;
-            if (formData.conditions[dayKey] === 'si') {
-                conditionsWithIssues.push(dayKey);
+            if (formData.conditions && formData.conditions[dayKey] === 'si') {
+                details.push(conditionsQuestions[dayKey] || `Condición ${i}`);
             }
         }
         
         // Check fatigue questions
-        const fatigueWithIssues = [];
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 1; i <= 8; i++) {
             const dayKey = `day${i}`;
-            if (formData.fatigue[dayKey] === 'si') {
-                fatigueWithIssues.push(dayKey);
+            if (formData.fatigue && formData.fatigue[dayKey] === 'si') {
+                details.push(fatigueQuestions[dayKey] || `Fatiga ${i}`);
             }
         }
         
-        const hasIssues = conditionsWithIssues.length > 0 || fatigueWithIssues.length > 0;
+        const hasIssues = details.length > 0;
         
         if (hasIssues) {
             console.log('⚠️ ALERTA: Trabajador marcó SÍ en preguntas de salud');
-            console.log('Condiciones con SÍ:', conditionsWithIssues);
-            console.log('Fatiga con SÍ:', fatigueWithIssues);
+            console.log('Detalles:', details);
         }
         
-        return hasIssues;
+        return {
+            hasIssues,
+            details
+        };
     }
 
     // Función para simular el paso al siguiente día (solo para testing)

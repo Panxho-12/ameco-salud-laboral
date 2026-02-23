@@ -451,13 +451,13 @@ app.post('/api/shift/:shiftId/day/:dayNumber', authenticateToken, async (req, re
       if (updateError) throw updateError;
       
       // Check for health issues (any "si" except first mandatory question)
-      const hasHealthIssues = checkForHealthIssues(formData);
+      const healthIssuesResult = checkForHealthIssues(formData);
       
       // Notify supervisors in real-time
       notifyNewOrder('worker');
       
       // If health issues detected, send special alert
-      if (hasHealthIssues) {
+      if (healthIssuesResult.hasIssues) {
         notifyHealthAlert(shiftId, dayNumber, req.user.name);
       }
       
@@ -478,13 +478,13 @@ app.post('/api/shift/:shiftId/day/:dayNumber', authenticateToken, async (req, re
       if (insertError) throw insertError;
       
       // Check for health issues (any "si" except first mandatory question)
-      const hasHealthIssues = checkForHealthIssues(formData);
+      const healthIssuesResult = checkForHealthIssues(formData);
       
       // Notify supervisors in real-time
       notifyNewOrder('worker');
       
       // If health issues detected, send special alert
-      if (hasHealthIssues) {
+      if (healthIssuesResult.hasIssues) {
         notifyHealthAlert(shiftId, dayNumber, req.user.name);
       }
       
@@ -1368,23 +1368,53 @@ function notifyDerivationRequired(shiftId, dayNumber) {
 
 // Helper function to check if form has health issues
 function checkForHealthIssues(formData) {
+  const details = [];
+  
+  // Mapeo de preguntas para mostrar texto legible
+  const conditionsQuestions = {
+    day2: "¿Padece de alguna enfermedad o molestia física?",
+    day3: "¿Presenta factores externos que le impidan estar concentrado?",
+    day4: "¿Ha sufrido algún accidente con lesión?"
+  };
+  
+  const fatigueQuestions = {
+    day1: "¿Ha tenido dificultades en lograr un descanso reparador?",
+    day2: "¿Presenta algún síntoma que dificulte su buen dormir?",
+    day3: "¿Sufre de insomnio últimamente?",
+    day4: "¿Durmió menos tiempo del necesario durante su último período de sueño?",
+    day5: "¿Está consumiendo algún medicamento que provoque somnolencia?",
+    day6: "¿Padece alguna enfermedad que produzca cansancio o somnolencia?",
+    day7: "¿Existen factores externos que afecten la calidad de su sueño?",
+    day8: "¿Ha presentado eventos importantes de somnolencia?"
+  };
+  
   // Check conditions (skip day1 which is the mandatory first question)
-  for (let i = 2; i <= 10; i++) {
+  for (let i = 2; i <= 4; i++) {
     const dayKey = `day${i}`;
     if (formData.conditions && formData.conditions[dayKey] === 'si') {
-      return true;
+      details.push(conditionsQuestions[dayKey] || `Condición ${i}`);
     }
   }
   
-  // Check fatigue questions (all of them)
-  for (let i = 1; i <= 10; i++) {
+  // Check fatigue questions
+  for (let i = 1; i <= 8; i++) {
     const dayKey = `day${i}`;
     if (formData.fatigue && formData.fatigue[dayKey] === 'si') {
-      return true;
+      details.push(fatigueQuestions[dayKey] || `Fatiga ${i}`);
     }
   }
   
-  return false;
+  const hasIssues = details.length > 0;
+  
+  if (hasIssues) {
+    console.log('⚠️ ALERTA: Trabajador marcó SÍ en preguntas de salud');
+    console.log('Detalles:', details);
+  }
+  
+  return {
+    hasIssues,
+    details
+  };
 }
 
 // Helper function to notify health alert
