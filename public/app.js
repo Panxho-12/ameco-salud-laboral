@@ -3221,10 +3221,17 @@ class AmecoApp {
 
         console.log('🔍 DEBUG openDerivationModal:');
         console.log('- Order:', order);
-        console.log('- form_data exists:', !!order?.form_data);
-        console.log('- form_data type:', typeof order?.form_data);
-        console.log('- form_data:', order?.form_data);
         console.log('- currentStatus:', currentStatus);
+
+        // Si ya fue derivado (status = 'si'), no permitir cambios
+        if (currentStatus === 'si') {
+            this.showCustomAlert('info', 'Caso Derivado a Prevención', 
+                `<p style="margin-bottom: 10px;">Este formulario ya fue marcado como <strong>"SÍ requiere derivación"</strong> y está en manos del equipo de Prevención de Riesgos.</p>
+                <p style="margin-bottom: 10px;"><strong>Nota del supervisor:</strong><br>${currentNote || 'Sin nota'}</p>
+                <p style="color: #0c5460; font-weight: bold;">⚠️ No puede modificar el estado hasta que Prevención revise el caso.</p>`
+            );
+            return;
+        }
 
         // Verificar si el trabajador marcó "SÍ" en alguna pregunta de salud
         let hasHealthIssues = false;
@@ -3233,29 +3240,23 @@ class AmecoApp {
         if (order?.form_data) {
             try {
                 const formData = typeof order.form_data === 'string' ? JSON.parse(order.form_data) : order.form_data;
-                console.log('- Parsed formData:', formData);
                 const healthIssuesResult = this.checkForHealthIssues(formData);
-                console.log('- Health issues result:', healthIssuesResult);
                 hasHealthIssues = healthIssuesResult.hasIssues;
                 healthIssuesDetails = healthIssuesResult.details;
             } catch (e) {
                 console.error('Error parsing form_data:', e);
             }
-        } else {
-            console.warn('⚠️ No form_data available in order');
         }
 
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
         
-        // Solo bloquear "NO" si tiene problemas de salud Y está en estado "pending"
-        // Si ya fue derivado (status = 'si'), permitir cambiar
+        // Si tiene problemas de salud y está en "pending", bloquear "NO"
         let healthAlertHtml = '';
         let noOptionDisabled = '';
         let noOptionStyle = 'cursor: pointer; background: #f8f9fa;';
         
-        if (hasHealthIssues && currentStatus === 'pending') {
-            // Tiene problemas Y aún no ha sido derivado → BLOQUEAR
+        if (hasHealthIssues) {
             noOptionDisabled = 'disabled';
             noOptionStyle = 'cursor: not-allowed; background: #e9ecef; opacity: 0.6;';
             healthAlertHtml = `
@@ -3272,25 +3273,6 @@ class AmecoApp {
                     </ul>
                     <p style="color: #856404; margin-top: 10px; font-weight: bold; font-size: 0.95rem;">
                         ⚠️ Debe marcar "SÍ requiere derivación" obligatoriamente.
-                    </p>
-                </div>
-            `;
-        } else if (hasHealthIssues && currentStatus === 'si') {
-            // Tiene problemas PERO ya fue derivado → MOSTRAR INFO pero PERMITIR cambiar
-            healthAlertHtml = `
-                <div style="background: #d1ecf1; border: 2px solid #0c5460; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 1.5rem; margin-right: 10px;">ℹ️</span>
-                        <strong style="color: #0c5460; font-size: 1.1rem;">Información: Problemas de Salud Detectados</strong>
-                    </div>
-                    <p style="color: #0c5460; margin-bottom: 10px; font-size: 0.95rem;">
-                        El trabajador marcó "SÍ" en las siguientes preguntas:
-                    </p>
-                    <ul style="color: #0c5460; margin: 0; padding-left: 20px; font-size: 0.9rem;">
-                        ${healthIssuesDetails.map(detail => `<li>${detail}</li>`).join('')}
-                    </ul>
-                    <p style="color: #0c5460; margin-top: 10px; font-size: 0.9rem;">
-                        ✓ Ya fue marcado como "SÍ requiere derivación". Puede modificar si es necesario.
                     </p>
                 </div>
             `;

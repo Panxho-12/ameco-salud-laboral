@@ -825,19 +825,26 @@ app.post('/api/supervisor/set-derivation/:shiftId/:dayNumber', authenticateToken
       return res.status(400).json({ error: 'Debe proporcionar una nota cuando marca "SÍ requiere derivación"' });
     }
 
-    // Obtener el formulario para verificar si hay problemas de salud
+    // Obtener el formulario para verificar estado actual
     const { data: existingForm, error: fetchError } = await supabase
       .from('daily_forms')
-      .select('form_data, supervisor_requires_derivation')
+      .select('form_data, supervisor_requires_derivation, derivation_reviewed')
       .eq('shift_id', shiftId)
       .eq('day_number', dayNumber)
       .single();
 
     if (fetchError) throw fetchError;
 
-    // Solo validar si el formulario está en estado "pending" (primera vez que se marca)
     const currentStatus = existingForm?.supervisor_requires_derivation || 'pending';
     
+    // Si ya fue derivado (status = 'si'), NO permitir cambios hasta que Prevención revise
+    if (currentStatus === 'si' && !existingForm?.derivation_reviewed) {
+      return res.status(403).json({ 
+        error: 'Este formulario ya fue derivado a Prevención. No puede modificar el estado hasta que sea revisado por el equipo de Prevención de Riesgos.'
+      });
+    }
+
+    // Solo validar problemas de salud si está en estado "pending" (primera vez)
     if (currentStatus === 'pending' && existingForm?.form_data) {
       const formData = typeof existingForm.form_data === 'string' 
         ? JSON.parse(existingForm.form_data) 
@@ -853,7 +860,6 @@ app.post('/api/supervisor/set-derivation/:shiftId/:dayNumber', authenticateToken
         });
       }
     }
-    // Si ya fue derivado antes (status = 'si' o 'no'), permitir cambiar sin validación adicional
 
     // Update the form
     const { data: updatedForm, error: updateError } = await supabase
