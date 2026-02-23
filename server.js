@@ -742,7 +742,7 @@ app.post('/api/supervisor/mark-all-derivation-no', authenticateToken, async (req
         *,
         shifts!inner(
           user_id,
-          users!inner(role)
+          users!inner(role, name)
         )
       `)
       .eq('worker_signed', true)
@@ -758,7 +758,34 @@ app.post('/api/supervisor/mark-all-derivation-no', authenticateToken, async (req
       return res.status(404).json({ error: 'No hay formularios pendientes' });
     }
 
-    // Mark all as "NO requiere derivación"
+    // Verificar si algún formulario tiene problemas de salud
+    const formsWithHealthIssues = [];
+    for (const form of workerForms) {
+      if (form.form_data) {
+        const formData = typeof form.form_data === 'string' 
+          ? JSON.parse(form.form_data) 
+          : form.form_data;
+        
+        const healthIssuesResult = checkForHealthIssues(formData);
+        if (healthIssuesResult.hasIssues) {
+          formsWithHealthIssues.push({
+            worker_name: form.shifts?.users?.name || 'Desconocido',
+            day_number: form.day_number,
+            issues: healthIssuesResult.details
+          });
+        }
+      }
+    }
+
+    // Si hay formularios con problemas de salud, rechazar la operación
+    if (formsWithHealthIssues.length > 0) {
+      return res.status(400).json({ 
+        error: `No se puede marcar todos como "NO" porque ${formsWithHealthIssues.length} formulario(s) tienen problemas de salud marcados`,
+        formsWithIssues: formsWithHealthIssues
+      });
+    }
+
+    // Mark all as "NO requiere derivación" solo si no hay problemas de salud
     const formIds = workerForms.map(f => f.id);
     const { error: updateError } = await supabase
       .from('daily_forms')
@@ -793,6 +820,33 @@ app.post('/api/supervisor/set-derivation/:shiftId/:dayNumber', authenticateToken
     // Validar que si es "si", debe tener nota
     if (requires_derivation === 'si' && (!derivation_note || derivation_note.trim() === '')) {
       return res.status(400).json({ error: 'Debe proporcionar una nota cuando marca "SÍ requiere derivación"' });
+    }
+
+    // Obtener el formulario para verificar si hay problemas de salud
+    const { data: existingForm, error: fetchError } = await supabase
+      .from('daily_forms')
+      .select('form_data')
+      .eq('shift_id', shiftId)
+      .eq('day_number', dayNumber)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    // Verificar si el trabajador marcó "SÍ" en alguna pregunta de salud
+    if (existingForm?.form_data) {
+      const formData = typeof existingForm.form_data === 'string' 
+        ? JSON.parse(existingForm.form_data) 
+        : existingForm.form_data;
+      
+      const healthIssuesResult = checkForHealthIssues(formData);
+      
+      // Si hay problemas de salud y el supervisor intenta marcar "NO", rechazar
+      if (healthIssuesResult.hasIssues && requires_derivation === 'no') {
+        return res.status(400).json({ 
+          error: 'No puede marcar "NO requiere derivación" porque el trabajador marcó "SÍ" en preguntas de salud',
+          healthIssues: healthIssuesResult.details
+        });
+      }
     }
 
     // Update the form

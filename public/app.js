@@ -3139,7 +3139,30 @@ class AmecoApp {
                 await this.loadPendingOrders();
             } else {
                 const error = await response.json();
-                this.showCustomAlert('error', 'Error', `Error: ${error.error}`);
+                
+                // Si hay formularios con problemas de salud, mostrar detalles
+                if (error.formsWithIssues && error.formsWithIssues.length > 0) {
+                    let detailsHtml = '<div style="text-align: left; max-height: 300px; overflow-y: auto;">';
+                    detailsHtml += '<p style="margin-bottom: 10px; font-weight: bold;">Los siguientes formularios tienen problemas de salud:</p>';
+                    detailsHtml += '<ul style="margin: 0; padding-left: 20px;">';
+                    
+                    error.formsWithIssues.forEach(form => {
+                        detailsHtml += `<li style="margin-bottom: 10px;">
+                            <strong>${form.worker_name}</strong> - Día ${form.day_number}
+                            <ul style="margin-top: 5px; font-size: 0.9em; color: #666;">
+                                ${form.issues.map(issue => `<li>${issue}</li>`).join('')}
+                            </ul>
+                        </li>`;
+                    });
+                    
+                    detailsHtml += '</ul>';
+                    detailsHtml += '<p style="margin-top: 15px; color: #dc3545; font-weight: bold;">⚠️ Debe revisar estos formularios individualmente y marcar "SÍ requiere derivación".</p>';
+                    detailsHtml += '</div>';
+                    
+                    this.showCustomAlert('error', 'No se puede marcar todos como NO', detailsHtml);
+                } else {
+                    this.showCustomAlert('error', 'Error', `Error: ${error.error}`);
+                }
             }
         } catch (error) {
             console.error('Error marking all derivation no:', error);
@@ -3153,8 +3176,51 @@ class AmecoApp {
         const currentStatus = order?.supervisor_requires_derivation || 'pending';
         const currentNote = order?.supervisor_derivation_note || '';
 
+        // Verificar si el trabajador marcó "SÍ" en alguna pregunta de salud
+        let hasHealthIssues = false;
+        let healthIssuesDetails = [];
+        
+        if (order?.form_data) {
+            try {
+                const formData = typeof order.form_data === 'string' ? JSON.parse(order.form_data) : order.form_data;
+                const healthIssuesResult = this.checkForHealthIssues(formData);
+                hasHealthIssues = healthIssuesResult.hasIssues;
+                healthIssuesDetails = healthIssuesResult.details;
+            } catch (e) {
+                console.error('Error parsing form_data:', e);
+            }
+        }
+
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
+        
+        // Si hay problemas de salud, mostrar alerta y bloquear opción "NO"
+        let healthAlertHtml = '';
+        let noOptionDisabled = '';
+        let noOptionStyle = 'cursor: pointer; background: #f8f9fa;';
+        
+        if (hasHealthIssues) {
+            noOptionDisabled = 'disabled';
+            noOptionStyle = 'cursor: not-allowed; background: #e9ecef; opacity: 0.6;';
+            healthAlertHtml = `
+                <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <span style="font-size: 1.5rem; margin-right: 10px;">⚠️</span>
+                        <strong style="color: #856404; font-size: 1.1rem;">ALERTA: Problemas de Salud Detectados</strong>
+                    </div>
+                    <p style="color: #856404; margin-bottom: 10px; font-size: 0.95rem;">
+                        El trabajador marcó "SÍ" en las siguientes preguntas:
+                    </p>
+                    <ul style="color: #856404; margin: 0; padding-left: 20px; font-size: 0.9rem;">
+                        ${healthIssuesDetails.map(detail => `<li>${detail}</li>`).join('')}
+                    </ul>
+                    <p style="color: #856404; margin-top: 10px; font-weight: bold; font-size: 0.95rem;">
+                        ⚠️ Debe marcar "SÍ requiere derivación" obligatoriamente.
+                    </p>
+                </div>
+            `;
+        }
+        
         modal.innerHTML = `
             <div class="modal-content" style="max-width: 90%; width: 500px; max-height: 90vh; overflow-y: auto;">
                 <div class="modal-header">
@@ -3167,19 +3233,21 @@ class AmecoApp {
                         <strong>Día:</strong> ${dayNumber} de 10
                     </p>
                     
+                    ${healthAlertHtml}
+                    
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; margin-bottom: 10px; font-weight: bold; font-size: 1rem;">
                             Seleccione una opción:
                         </label>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #28a745; border-radius: 8px; cursor: pointer; background: #f8f9fa;">
-                                <input type="radio" name="derivation" value="no" ${currentStatus === 'no' ? 'checked' : ''} 
+                            <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #28a745; border-radius: 8px; ${noOptionStyle}">
+                                <input type="radio" name="derivation" value="no" ${currentStatus === 'no' && !hasHealthIssues ? 'checked' : ''} ${noOptionDisabled}
                                        onchange="document.getElementById('derivationNoteContainer').style.display = 'none'"
                                        style="margin-right: 10px; width: 20px; height: 20px;">
                                 <span style="font-size: 1rem; color: #28a745; font-weight: bold;">✓ NO requiere derivación</span>
                             </label>
                             <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #dc3545; border-radius: 8px; cursor: pointer; background: #f8f9fa;">
-                                <input type="radio" name="derivation" value="si" ${currentStatus === 'si' ? 'checked' : ''}
+                                <input type="radio" name="derivation" value="si" ${currentStatus === 'si' || hasHealthIssues ? 'checked' : ''}
                                        onchange="document.getElementById('derivationNoteContainer').style.display = 'block'"
                                        style="margin-right: 10px; width: 20px; height: 20px;">
                                 <span style="font-size: 1rem; color: #dc3545; font-weight: bold;">⚠️ SÍ requiere derivación</span>
@@ -3187,7 +3255,7 @@ class AmecoApp {
                         </div>
                     </div>
                     
-                    <div id="derivationNoteContainer" style="display: ${currentStatus === 'si' ? 'block' : 'none'}; margin-top: 20px;">
+                    <div id="derivationNoteContainer" style="display: ${currentStatus === 'si' || hasHealthIssues ? 'block' : 'none'}; margin-top: 20px;">
                         <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #dc3545; font-size: 1rem;">
                             Nota explicativa (obligatoria si marca SÍ):
                         </label>
