@@ -48,6 +48,56 @@ const authenticateToken = (req, res, next) => {
 // AUTHENTICATION ROUTES
 // ============================================
 
+// Helper function to log audit events
+async function logAuditEvent(userId, userName, userRole, actionType, actionDetails, ipAddress) {
+  try {
+    await supabase
+      .from('audit_logs')
+      .insert([{
+        user_id: userId,
+        user_name: userName,
+        user_role: userRole,
+        action_type: actionType,
+        action_details: actionDetails,
+        ip_address: ipAddress
+      }]);
+  } catch (error) {
+    console.error('Error logging audit event:', error);
+    // Don't throw - logging should not block main operation
+  }
+}
+
+// Helper function to validate password strength
+function validatePassword(password) {
+  const minLength = 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  const errors = [];
+  if (password.length < minLength) {
+    errors.push(`Mínimo ${minLength} caracteres`);
+  }
+  if (!hasUpperCase) {
+    errors.push('Al menos una mayúscula');
+  }
+  if (!hasLowerCase) {
+    errors.push('Al menos una minúscula');
+  }
+  if (!hasNumber) {
+    errors.push('Al menos un número');
+  }
+  if (!hasSpecialChar) {
+    errors.push('Al menos un carácter especial (!@#$%^&*...)');
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
 app.post('/api/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -66,8 +116,29 @@ app.post('/api/login', async (req, res) => {
 
     if (error || !user || user.password !== password) {
       console.log('Login fallido - Credenciales inválidas');
+      // Log failed login attempt
+      if (user) {
+        await logAuditEvent(
+          user.id,
+          user.name,
+          user.role,
+          'login_failed',
+          { username, reason: 'invalid_password' },
+          req.ip || req.connection.remoteAddress
+        );
+      }
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
+
+    // Log successful login
+    await logAuditEvent(
+      user.id,
+      user.name,
+      user.role,
+      'login_success',
+      { username },
+      req.ip || req.connection.remoteAddress
+    );
 
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role, name: user.name },
@@ -84,11 +155,113 @@ app.post('/api/login', async (req, res) => {
         username: user.username, 
         role: user.role, 
         name: user.name,
-        shift: user.shift
+        shift: user.shift,
+        requiresPasswordChange: !user.first_login_completed // Flag para frontend
       } 
     });
   } catch (error) {
     console.error('Error en login:', error);
+    res.status(500).json({ error: 'Error del servidor' });
+  }
+});
+
+// Change password endpoint
+app.post('/api/change-password', authenticateToken, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Se requiere contraseña actual y nueva contraseña' });
+    }
+
+    // Get user from database
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', req.user.id)
+      .single();
+
+    if (userError || !user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    // Verify current password
+    if (user.password !== currentPassword) {
+      return res.status(401).json({ error: 'Contraseña actual incorrecta' });
+    }
+
+    // Validate new password
+    const validation = validatePassword(newPassword);
+    if (!validation.isValid) {
+      return res.status(400).json({ 
+        error: 'La nueva contraseña no cumple los requisitos',
+        requirements: validation.errors
+      });
+    }
+
+    // Check that new password is different from default
+    const defaultPassword = 'Ameco@2025';
+    if (newPassword === defaultPassword) {
+      return res.status(400).json({ 
+        error: 'La nueva contraseña no puede ser la contraseña por defecto'
+      });
+    }
+
+    // Check that new password is different from current
+    if (newPassword === currentPassword) {
+      return res.status(400).json({ 
+        error: 'La nueva contraseña debe ser diferente de la actual'
+      });
+    }
+
+    // Update password
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        password: newPassword,
+        first_login_completed: true,
+        password_changed_at: new Date().toISOString()
+      })
+      .eq('id', req.user.id);
+
+    if (updateError) throw updateError;
+
+    // Log password change
+    await logAuditEvent(
+      req.user.id,
+      req.user.name,
+      req.user.role,
+      'password_changed',
+      { first_time: !user.first_login_completed },
+      req.ip || req.connection.remoteAddress
+    );
+
+    res.json({ 
+      message: 'Contraseña cambiada exitosamente',
+      success: true
+    });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ error: 'Error del servidor' });
+  }
+});
+
+// Logout endpoint (for audit logging)
+app.post('/api/logout', authenticateToken, async (req, res) => {
+  try {
+    // Log logout
+    await logAuditEvent(
+      req.user.id,
+      req.user.name,
+      req.user.role,
+      'logout',
+      {},
+      req.ip || req.connection.remoteAddress
+    );
+
+    res.json({ message: 'Logout exitoso' });
+  } catch (error) {
+    console.error('Error in logout:', error);
     res.status(500).json({ error: 'Error del servidor' });
   }
 });

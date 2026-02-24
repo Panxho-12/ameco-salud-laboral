@@ -419,6 +419,51 @@
             </div>
         </div>
 
+        <!-- Password Change Modal -->
+        <div id="passwordChangeModal" class="modal password-change-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🔐 Cambio de Contraseña Obligatorio</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="password-change-warning">
+                        <p><strong>⚠️ IMPORTANTE:</strong> Por seguridad, debe cambiar su contraseña antes de continuar.</p>
+                        <p>Su nueva contraseña debe cumplir los siguientes requisitos:</p>
+                        <ul class="password-requirements">
+                            <li id="req-length">✗ Mínimo 8 caracteres</li>
+                            <li id="req-uppercase">✗ Al menos una letra mayúscula (A-Z)</li>
+                            <li id="req-lowercase">✗ Al menos una letra minúscula (a-z)</li>
+                            <li id="req-number">✗ Al menos un número (0-9)</li>
+                            <li id="req-special">✗ Al menos un carácter especial (!@#$%^&*...)</li>
+                        </ul>
+                    </div>
+
+                    <form id="passwordChangeForm">
+                        <div class="form-group">
+                            <label for="currentPasswordInput">Contraseña Actual:</label>
+                            <input type="password" id="currentPasswordInput" required autocomplete="current-password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPasswordInput">Nueva Contraseña:</label>
+                            <input type="password" id="newPasswordInput" required autocomplete="new-password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPasswordInput">Confirmar Nueva Contraseña:</label>
+                            <input type="password" id="confirmPasswordInput" required autocomplete="new-password">
+                        </div>
+
+                        <div id="passwordChangeError" class="error-message"></div>
+
+                        <div class="modal-actions">
+                            <button type="submit" class="btn-primary">Cambiar Contraseña</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Digital Signature Modal -->
         <div id="signatureModal" class="modal">
             <div class="modal-content signature-modal-content">
