@@ -77,6 +77,10 @@ app.post('/api/login', async (req, res) => {
 
     console.log('Login exitoso para:', user.username);
 
+    // Check if user is critical role and needs password change
+    const isCriticalRole = ['supervisor', 'operations_manager', 'ohsem'].includes(user.role);
+    const requiresPasswordChange = isCriticalRole && !user.first_login_completed;
+
     res.json({ 
       token, 
       user: { 
@@ -84,11 +88,120 @@ app.post('/api/login', async (req, res) => {
         username: user.username, 
         role: user.role, 
         name: user.name,
-        shift: user.shift
+        shift: user.shift,
+        requiresPasswordChange: requiresPasswordChange
       } 
     });
   } catch (error) {
     console.error('Error en login:', error);
+    res.status(500).json({ error: 'Error del servidor' });
+  }
+});
+
+// Helper function to validate password strength
+function validatePassword(password) {
+  const minLength = 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  const errors = [];
+  if (password.length < minLength) {
+    errors.push(`Mínimo ${minLength} caracteres`);
+  }
+  if (!hasUpperCase) {
+    errors.push('Al menos una mayúscula');
+  }
+  if (!hasLowerCase) {
+    errors.push('Al menos una minúscula');
+  }
+  if (!hasNumber) {
+    errors.push('Al menos un número');
+  }
+  if (!hasSpecialChar) {
+    errors.push('Al menos un carácter especial (!@#$%^&*...)');
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+// Change password endpoint (only for critical roles)
+app.post('/api/change-password', authenticateToken, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Se requiere contraseña actual y nueva contraseña' });
+    }
+
+    // Verify user is critical role
+    const isCriticalRole = ['supervisor', 'operations_manager', 'ohsem'].includes(req.user.role);
+    if (!isCriticalRole) {
+      return res.status(403).json({ error: 'Solo roles críticos pueden cambiar contraseña' });
+    }
+
+    // Get user from database
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', req.user.id)
+      .single();
+
+    if (userError || !user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    // Verify current password
+    if (user.password !== currentPassword) {
+      return res.status(401).json({ error: 'Contraseña actual incorrecta' });
+    }
+
+    // Validate new password
+    const validation = validatePassword(newPassword);
+    if (!validation.isValid) {
+      return res.status(400).json({ 
+        error: 'La nueva contraseña no cumple los requisitos',
+        requirements: validation.errors
+      });
+    }
+
+    // Check that new password is different from default
+    const defaultPassword = 'Ameco@2025';
+    if (newPassword === defaultPassword) {
+      return res.status(400).json({ 
+        error: 'La nueva contraseña no puede ser la contraseña por defecto'
+      });
+    }
+
+    // Check that new password is different from current
+    if (newPassword === currentPassword) {
+      return res.status(400).json({ 
+        error: 'La nueva contraseña debe ser diferente de la actual'
+      });
+    }
+
+    // Update password
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        password: newPassword,
+        first_login_completed: true,
+        password_changed_at: new Date().toISOString()
+      })
+      .eq('id', req.user.id);
+
+    if (updateError) throw updateError;
+
+    res.json({ 
+      message: 'Contraseña cambiada exitosamente',
+      success: true
+    });
+  } catch (error) {
+    console.error('Error changing password:', error);
     res.status(500).json({ error: 'Error del servidor' });
   }
 });

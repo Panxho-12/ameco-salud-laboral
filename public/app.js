@@ -239,7 +239,14 @@ class AmecoApp {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
                 this.currentUser = data.user;
-                this.showDashboard();
+                
+                // Check if password change is required (only for critical roles)
+                if (data.user.requiresPasswordChange) {
+                    console.log('Usuario requiere cambio de contraseña');
+                    this.showPasswordChangeModal();
+                } else {
+                    this.showDashboard();
+                }
             } else {
                 errorDiv.textContent = data.error;
                 errorDiv.classList.add('show');
@@ -260,6 +267,113 @@ class AmecoApp {
         
         // Reload page to clear all state and cached DOM
         window.location.reload();
+    }
+
+    showPasswordChangeModal() {
+        const modal = document.getElementById('passwordChangeModal');
+        modal.classList.add('show');
+        
+        // Setup form validation
+        const newPasswordInput = document.getElementById('newPasswordInput');
+        newPasswordInput.addEventListener('input', () => {
+            this.validatePasswordRequirements(newPasswordInput.value);
+        });
+        
+        // Setup form submission
+        const form = document.getElementById('passwordChangeForm');
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            this.changePassword();
+        };
+    }
+
+    validatePasswordRequirements(password) {
+        const requirements = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+        };
+
+        // Update UI
+        document.getElementById('req-length').className = requirements.length ? 'valid' : '';
+        document.getElementById('req-uppercase').className = requirements.uppercase ? 'valid' : '';
+        document.getElementById('req-lowercase').className = requirements.lowercase ? 'valid' : '';
+        document.getElementById('req-number').className = requirements.number ? 'valid' : '';
+        document.getElementById('req-special').className = requirements.special ? 'valid' : '';
+
+        // Update checkmarks
+        document.getElementById('req-length').textContent = (requirements.length ? '✓' : '✗') + ' Mínimo 8 caracteres';
+        document.getElementById('req-uppercase').textContent = (requirements.uppercase ? '✓' : '✗') + ' Al menos una letra mayúscula (A-Z)';
+        document.getElementById('req-lowercase').textContent = (requirements.lowercase ? '✓' : '✗') + ' Al menos una letra minúscula (a-z)';
+        document.getElementById('req-number').textContent = (requirements.number ? '✓' : '✗') + ' Al menos un número (0-9)';
+        document.getElementById('req-special').textContent = (requirements.special ? '✓' : '✗') + ' Al menos un carácter especial (!@#$%^&*...)';
+
+        return Object.values(requirements).every(req => req);
+    }
+
+    async changePassword() {
+        const currentPassword = document.getElementById('currentPasswordInput').value;
+        const newPassword = document.getElementById('newPasswordInput').value;
+        const confirmPassword = document.getElementById('confirmPasswordInput').value;
+        const errorDiv = document.getElementById('passwordChangeError');
+
+        // Clear previous errors
+        errorDiv.classList.remove('show');
+        errorDiv.textContent = '';
+
+        // Validate passwords match
+        if (newPassword !== confirmPassword) {
+            errorDiv.textContent = 'Las contraseñas no coinciden';
+            errorDiv.classList.add('show');
+            return;
+        }
+
+        // Validate password requirements
+        if (!this.validatePasswordRequirements(newPassword)) {
+            errorDiv.textContent = 'La nueva contraseña no cumple todos los requisitos';
+            errorDiv.classList.add('show');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/change-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ currentPassword, newPassword })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Update user object
+                this.currentUser.requiresPasswordChange = false;
+                localStorage.setItem('user', JSON.stringify(this.currentUser));
+                
+                // Close modal
+                document.getElementById('passwordChangeModal').classList.remove('show');
+                
+                // Show success message
+                alert('✅ Contraseña cambiada exitosamente. La página se recargará para continuar con la configuración de su firma digital.');
+                
+                // Refresh page to trigger signature modal
+                window.location.reload();
+            } else {
+                errorDiv.textContent = data.error || 'Error al cambiar contraseña';
+                if (data.requirements) {
+                    errorDiv.textContent += ': ' + data.requirements.join(', ');
+                }
+                errorDiv.classList.add('show');
+            }
+        } catch (error) {
+            console.error('Error changing password:', error);
+            errorDiv.textContent = 'Error de conexión';
+            errorDiv.classList.add('show');
+        }
     }
 
     showLogin() {

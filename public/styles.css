@@ -4078,3 +4078,108 @@ html {
         font-size: 0.95rem;
     }
 }
+
+
+/* ============================================
+   PASSWORD CHANGE MODAL (ROLES CRÍTICOS)
+   ============================================ */
+
+.password-change-modal .modal-content {
+    max-width: 500px;
+    width: 90%;
+}
+
+.password-change-warning {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+}
+
+.password-change-warning p {
+    margin-bottom: 0.5rem;
+    color: #856404;
+}
+
+.password-change-warning strong {
+    font-weight: 600;
+}
+
+.password-requirements {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0.5rem;
+}
+
+.password-requirements li {
+    padding: 0.3rem 0;
+    color: #dc3545;
+    font-size: 0.9rem;
+}
+
+.password-requirements li.valid {
+    color: #28a745;
+}
+
+#passwordChangeForm .form-group {
+    margin-bottom: 1rem;
+}
+
+#passwordChangeForm label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+#passwordChangeForm input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+#passwordChangeForm input[type="password"]:focus {
+    outline: none;
+    border-color: #004488;
+    box-shadow: 0 0 0 0.2rem rgba(0, 68, 136, 0.25);
+}
+
+#passwordChangeError {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    color: #721c24;
+    display: none;
+}
+
+#passwordChangeError.show {
+    display: block;
+}
+
+.password-change-modal .modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.password-change-modal .btn-primary {
+    width: 100%;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .password-change-modal .modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+    }
+    
+    .password-requirements {
+        font-size: 0.85rem;
+    }
+}
