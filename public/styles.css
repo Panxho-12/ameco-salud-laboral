@@ -4084,9 +4084,15 @@ html {
    PASSWORD CHANGE MODAL (ROLES CRÍTICOS)
    ============================================ */
 
+.password-change-modal {
+    /* Prevent closing by clicking outside */
+    pointer-events: auto;
+}
+
 .password-change-modal .modal-content {
     max-width: 500px;
     width: 90%;
+    pointer-events: auto;
 }
 
 .password-change-warning {

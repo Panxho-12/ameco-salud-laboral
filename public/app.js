@@ -213,7 +213,19 @@ class AmecoApp {
         const token = localStorage.getItem('token');
         if (token) {
             this.currentUser = JSON.parse(localStorage.getItem('user'));
-            this.showDashboard();
+            
+            // If user requires password change, ALWAYS show the modal (even on reload)
+            if (this.currentUser.requiresPasswordChange) {
+                // Show login screen first (to have proper background)
+                document.getElementById('loginScreen').classList.remove('active');
+                document.getElementById('dashboardScreen').classList.add('active');
+                
+                // Then immediately show password change modal
+                this.showPasswordChangeModal();
+            } else {
+                // Normal flow - show dashboard
+                this.showDashboard();
+            }
         } else {
             this.showLogin();
         }
@@ -350,7 +362,7 @@ class AmecoApp {
             const data = await response.json();
 
             if (response.ok) {
-                // Update user object
+                // Update user object in localStorage
                 this.currentUser.requiresPasswordChange = false;
                 localStorage.setItem('user', JSON.stringify(this.currentUser));
                 
