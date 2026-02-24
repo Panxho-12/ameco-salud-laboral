@@ -252,14 +252,7 @@ function generateFormPDF(formData) {
 <body>
     <div class="header">
         <div class="logo-container">
-            <svg width="140" height="65" viewBox="0 0 1024 300" xmlns="http://www.w3.org/2000/svg">
-                <!-- Fondo azul oscuro -->
-                <rect x="0" y="0" width="1024" height="300" fill="#1e3a5f"/>
-                <!-- Franja roja inferior ondulada -->
-                <path d="M 0 200 Q 256 180 512 200 T 1024 200 L 1024 300 L 0 300 Z" fill="#d32f2f"/>
-                <!-- Texto AMECO en blanco -->
-                <text x="512" y="170" font-family="Arial Black, sans-serif" font-size="150" font-weight="900" fill="white" text-anchor="middle" letter-spacing="10">AMECO</text>
-            </svg>
+            <img src="data:image/png;base64,LOGO_BASE64_PLACEHOLDER" style="max-width: 200px; height: auto;" alt="AMECO Logo">
         </div>
         <div class="header-content">
             <div class="title">Estándar de Salud en el Trabajo</div>
