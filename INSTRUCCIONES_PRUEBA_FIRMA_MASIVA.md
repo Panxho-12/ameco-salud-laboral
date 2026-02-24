@@ -52,7 +52,7 @@ Probar las funcionalidades de:
 4. Espera a que termine
 
 **¿Qué hace este script?**
-- Elimina TODOS los formularios del Turno B (todos los días, no solo día 6)
+- Elimina todos los formularios del día 6 del Turno B
 - Elimina todas las firmas digitales del Turno B
 - Deja la base de datos limpia para uso real
 
@@ -60,7 +60,7 @@ Probar las funcionalidades de:
 
 Después de limpiar, verifica que:
 - Los usuarios del Turno B no tienen firmas digitales
-- No hay formularios del Turno B en el sistema (ningún día)
+- No hay formularios del día 6 en el sistema
 - Los usuarios pueden crear sus propias firmas
 - Los usuarios pueden completar sus formularios reales
 

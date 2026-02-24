@@ -2,11 +2,11 @@
 -- SCRIPT DE LIMPIEZA: Eliminar datos de prueba
 -- ============================================
 -- Este script elimina todos los datos de prueba creados:
--- 1. TODOS los formularios del Turno B (no solo día 6)
+-- 1. Formularios del día 6 del Turno B
 -- 2. Firmas digitales de todos los usuarios del Turno B
 -- ============================================
 
--- PASO 1: Eliminar TODOS los formularios del Turno B
+-- PASO 1: Eliminar formularios del día 6 del Turno B
 -- ============================================
 
 DELETE FROM daily_forms
@@ -14,8 +14,9 @@ WHERE shift_id IN (
     SELECT s.id 
     FROM shifts s
     INNER JOIN users u ON s.user_id = u.id
-    WHERE u.shift = 'B'
-);
+    WHERE u.shift = 'B' AND u.role = 'worker'
+)
+AND day_number = 6;
 
 -- Verificar eliminación de formularios
 SELECT 
@@ -24,7 +25,9 @@ SELECT
 FROM daily_forms df
 INNER JOIN shifts s ON df.shift_id = s.id
 INNER JOIN users u ON s.user_id = u.id
-WHERE u.shift = 'B';
+WHERE u.shift = 'B' 
+AND u.role = 'worker'
+AND df.day_number = 6;
 
 -- PASO 2: Eliminar firmas digitales del Turno B
 -- ============================================
@@ -73,7 +76,7 @@ BEGIN
     RAISE NOTICE 'DATOS DE PRUEBA ELIMINADOS EXITOSAMENTE';
     RAISE NOTICE '============================================';
     RAISE NOTICE 'Se eliminaron:';
-    RAISE NOTICE '- TODOS los formularios del Turno B (todos los días)';
+    RAISE NOTICE '- Formularios del día 6 del Turno B';
     RAISE NOTICE '- Firmas digitales del Turno B';
     RAISE NOTICE '============================================';
     RAISE NOTICE 'Los usuarios ahora pueden crear sus propias firmas';
