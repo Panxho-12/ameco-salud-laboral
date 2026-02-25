@@ -370,7 +370,7 @@ class AmecoApp {
                 document.getElementById('passwordChangeModal').classList.remove('show');
                 
                 // Show success message
-                alert('✅ Contraseña cambiada exitosamente. La página se recargará para continuar con la configuración de su firma digital.');
+                alert('Contraseña actualizada. La página se recargará.');
                 
                 // Refresh page to trigger signature modal
                 window.location.reload();
